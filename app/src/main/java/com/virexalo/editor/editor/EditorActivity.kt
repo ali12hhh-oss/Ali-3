@@ -108,6 +108,12 @@ class EditorActivity : AppCompatActivity() {
         findViewById<android.view.View>(R.id.undoButton).setOnClickListener { viewModel.undo() }
         findViewById<android.view.View>(R.id.redoButton).setOnClickListener { viewModel.redo() }
         findViewById<android.view.View>(R.id.exportButton).setOnClickListener { exportTrimmed() }
+        findViewById<android.view.View>(R.id.textSaveButton).setOnClickListener {
+            timeline.setTextLabel(liveTextInput.text.toString())
+            textEditorBar.visibility = View.GONE
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager).hideSoftInputFromWindow(liveTextInput.windowToken, 0)
+            viewModel.clearTool()
+        }
         findViewById<android.view.View>(R.id.textCloseButton).setOnClickListener {
             textEditorBar.visibility = View.GONE
             (getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
@@ -146,6 +152,26 @@ class EditorActivity : AppCompatActivity() {
             trimStartMs = start
             trimEndMs = end
         }
+        timeline.onClipSelected = { id ->
+            currentProject = currentProject?.withSelected(id)
+            currentProject?.let { viewModel.applyProject(it) }
+        }
+        timeline.onClipMoved = { id, delta ->
+            val p = currentProject ?: return@onClipMoved
+            val clip = p.clips.firstOrNull { it.id == id } ?: return@onClipMoved
+            val maxStart = (p.clips.filter { it.id != id }.maxOfOrNull { it.endOnTimelineMs } ?: durationMs).coerceAtLeast(0L)
+            val newStart = (clip.startOnTimelineMs + delta).coerceAtLeast(0L).coerceAtMost(maxStart + durationMs)
+            val next = p.copy(clips = p.clips.map { if (it.id == id) it.copy(startOnTimelineMs = newStart) else it })
+            currentProject = next; viewModel.applyProject(next)
+        }
+        timeline.onClipResized = { id, leftDelta, rightDelta ->
+            val p = currentProject ?: return@onClipResized
+            val clip = p.clips.firstOrNull { it.id == id } ?: return@onClipResized
+            val newStart = (clip.startOnTimelineMs + leftDelta).coerceAtLeast(0L)
+            val newDuration = (clip.durationMs - leftDelta + rightDelta).coerceAtLeast(300L)
+            val next = p.copy(clips = p.clips.map { if (it.id == id) it.copy(startOnTimelineMs = newStart, durationMs = newDuration) else it })
+            currentProject = next; viewModel.applyProject(next)
+        }
         timeline.onPositionChanged = { position ->
             player?.seekTo(position)
             viewModel.setPlayhead(position)
@@ -153,7 +179,7 @@ class EditorActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.state.collect { state ->
-                if (state != null) currentProject = state.project
+                if (state != null) { currentProject = state.project; timeline.setProject(state.project); timeline.setTextLabel(activeText?.text?.toString().orEmpty()) }
             }
         }
         preparePlayer()
