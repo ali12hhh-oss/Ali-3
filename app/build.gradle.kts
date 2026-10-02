@@ -2,7 +2,7 @@ plugins { id("com.android.application") }
 
 android {
     namespace = "com.virexalo.editor"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.virexalo.editor"
         minSdk = 26
