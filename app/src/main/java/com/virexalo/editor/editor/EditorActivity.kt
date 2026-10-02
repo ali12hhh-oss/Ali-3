@@ -26,6 +26,11 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.transformer.Composition
+import androidx.media3.transformer.Effects
+import androidx.media3.effect.Brightness
+import androidx.media3.effect.Contrast
+import androidx.media3.effect.HslAdjustment
+import androidx.media3.effect.Crop
 import androidx.media3.transformer.EditedMediaItem
 import androidx.media3.transformer.ExportException
 import androidx.media3.transformer.Transformer
@@ -41,6 +46,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.io.File
 
+@androidx.media3.common.util.UnstableApi
 class EditorActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_URI = "media_uri"
@@ -69,6 +75,12 @@ class EditorActivity : AppCompatActivity() {
         if (uri != null) prepareAudioImport(uri)
     }
     private val audioClips = mutableListOf<AudioClip>()
+    private var filterPreset = 0
+    private var brightness = 0f
+    private var contrast = 0f
+    private var saturation = 0f
+    private var cropPreset = 0
+    private var speed = 1f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,11 +161,12 @@ class EditorActivity : AppCompatActivity() {
                 EditorTool.SPLIT -> splitAtPlayhead()
                 EditorTool.TEXT -> showTextTool()
                 EditorTool.AUDIO -> openAudioPicker()
-                EditorTool.FILTERS -> openToolPanel("Filters")
-                EditorTool.EFFECTS -> openToolPanel("Effects")
-                EditorTool.CROP -> openToolPanel("Crop")
-                EditorTool.CANVAS -> openToolPanel("Canvas Background")
+                EditorTool.FILTERS -> showFilterCatalog()
+                EditorTool.EFFECTS -> showEffectCatalog()
+                EditorTool.CROP -> showCropCatalog()
+                EditorTool.CANVAS -> showCanvasCatalog()
                 EditorTool.SPEED -> openToolPanel("Speed")
+                EditorTool.ADJUST -> openToolPanel("Adjust")
                 EditorTool.TRANSITIONS -> openToolPanel("Transitions")
                 EditorTool.MASK -> openToolPanel("Mask")
                 EditorTool.CHROMA_KEY -> openToolPanel("Chroma Key")
@@ -361,6 +374,123 @@ class EditorActivity : AppCompatActivity() {
         })
     }
 
+    private fun showFilterCatalog() {
+        val frame = frameAt(mediaUri ?: return)
+        val names = arrayOf("Original", "Mono", "Warm", "Cool", "High Contrast")
+        val effects = arrayOf(
+            listOf<androidx.media3.common.Effect>(),
+            listOf(HslAdjustment.Builder().adjustSaturation(-100f).build()),
+            listOf(HslAdjustment.Builder().adjustHue(18f).adjustLightness(5f).build()),
+            listOf(HslAdjustment.Builder().adjustHue(-18f).adjustSaturation(8f).build()),
+            listOf(Contrast(0.45f), Brightness(0.04f))
+        )
+        val row = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(10), dp(6), dp(10), dp(6))
+        }
+        names.indices.forEach { i ->
+            val box = android.widget.LinearLayout(this).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+                setPadding(dp(5), dp(4), dp(5), dp(4))
+            }
+            val preview = android.widget.ImageView(this).apply {
+                layoutParams = android.widget.LinearLayout.LayoutParams(dp(82), dp(58))
+                scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                setImageBitmap(frame)
+                if (i != 0) {
+                    val cm = android.graphics.ColorMatrix()
+                    when (i) {
+                        1 -> cm.setSaturation(0f)
+                        2 -> cm.setColorScale(1.08f, 0.96f, 0.82f, 1f)
+                        3 -> cm.setColorScale(0.84f, 0.95f, 1.10f, 1f)
+                        4 -> cm.setSaturation(1.45f)
+                    }
+                    imagePreviewPaint(preview, cm)
+                }
+            }
+            val label = android.widget.TextView(this).apply {
+                text = names[i]
+                textSize = 11f
+                setTextColor(Color.WHITE)
+                gravity = Gravity.CENTER
+            }
+            box.addView(preview); box.addView(label)
+            box.setOnClickListener {
+                filterPreset = i
+                applyVideoEffects()
+                (box.parent as? android.view.ViewGroup)?.let { }
+            }
+            row.addView(box)
+        }
+        AlertDialog.Builder(this).setTitle(R.string.filters).setView(row).setNegativeButton(R.string.close, null).show()
+    }
+
+    private fun imagePreviewPaint(view: android.widget.ImageView, matrix: android.graphics.ColorMatrix) {
+        view.colorFilter = android.graphics.ColorMatrixColorFilter(matrix)
+    }
+
+    private fun showEffectCatalog() {
+        val names = arrayOf("None", "Fade", "Soft Blur")
+        AlertDialog.Builder(this)
+            .setTitle(R.string.effects)
+            .setItems(names) { _, which ->
+                if (which == 2) {
+                    openToolPanel("Soft Blur")
+                } else {
+                    viewModel.clearTool()
+                }
+            }
+            .setNegativeButton(R.string.close, null)
+            .show()
+    }
+
+    private fun showCropCatalog() {
+        val names = arrayOf("Original", "1:1", "4:5", "9:16", "16:9")
+        AlertDialog.Builder(this)
+            .setTitle("Crop")
+            .setItems(names) { _, which ->
+                cropPreset = which
+                applyVideoEffects()
+            }
+            .setNegativeButton(R.string.close, null)
+            .show()
+    }
+
+    private fun showCanvasCatalog() {
+        val names = arrayOf("Black", "Dark", "White")
+        AlertDialog.Builder(this).setTitle("Canvas Background").setItems(names) { _, which ->
+            val colors = intArrayOf(Color.BLACK, Color.rgb(18,20,30), Color.WHITE)
+            overlayContainer.setBackgroundColor(colors[which])
+        }.setNegativeButton(R.string.close, null).show()
+    }
+
+    private fun createVideoEffects(): List<androidx.media3.common.Effect> {
+        val list = mutableListOf<androidx.media3.common.Effect>()
+        when (filterPreset) {
+            1 -> list += HslAdjustment.Builder().adjustSaturation(-100f).build()
+            2 -> list += HslAdjustment.Builder().adjustHue(18f).adjustLightness(5f).build()
+            3 -> list += HslAdjustment.Builder().adjustHue(-18f).adjustSaturation(8f).build()
+            4 -> list += listOf(Contrast(0.45f), Brightness(0.04f))
+        }
+        if (brightness != 0f) list += Brightness(brightness)
+        if (contrast != 0f) list += Contrast(contrast)
+        if (saturation != 0f) list += HslAdjustment.Builder().adjustSaturation(saturation).build()
+        when (cropPreset) {
+            1 -> list += Crop(-1f, 1f, -1f, 1f)
+            2 -> list += Crop(-0.8f, 0.8f, -1f, 1f)
+            3 -> list += Crop(-0.5625f, 0.5625f, -1f, 1f)
+            4 -> list += Crop(-1f, 1f, -0.5625f, 0.5625f)
+        }
+        return list
+    }
+
+    private fun applyVideoEffects() {
+        runCatching { player?.setVideoEffects(createVideoEffects()) }
+            .onFailure { Toast.makeText(this, "Effect unavailable on this device", Toast.LENGTH_SHORT).show() }
+    }
+
     private fun openToolPanel(title: String) {
         findViewById<View>(R.id.toolPanel).visibility = View.VISIBLE
         findViewById<android.widget.TextView>(R.id.toolTitle).text = title
@@ -482,7 +612,9 @@ class EditorActivity : AppCompatActivity() {
             .setEndPositionMs(trimEndMs)
             .build()
         val media = MediaItem.Builder().setUri(uri).setClippingConfiguration(clip).build()
-        val item = EditedMediaItem.Builder(media).build()
+        val item = EditedMediaItem.Builder(media)
+            .setEffects(Effects(emptyList(), createVideoEffects()))
+            .build()
         val transformer = Transformer.Builder(this)
             .setVideoMimeType("video/avc")
             .addListener(object : Transformer.Listener {
