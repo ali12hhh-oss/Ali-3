@@ -24,4 +24,8 @@
     <string name="enter_text">Enter text</string>
     <string name="add_text">Add text</string>
     <string name="text_added">Text layer added</string>
+    <string name="audio_trim_before_import">Trim audio before import</string>
+    <string name="audio_duration_seconds">Duration: %1$d seconds</string>
+    <string name="import_audio">Import audio</string>
+    <string name="audio_imported">Audio imported</string>
 </resources>
