@@ -90,6 +90,11 @@ class EditorActivity : AppCompatActivity() {
             viewModel.setPlayhead(position)
         }
 
+        lifecycleScope.launch {
+            viewModel.state.collect { state ->
+                if (state != null) currentProject = state.project
+            }
+        }
         preparePlayer()
     }
 
