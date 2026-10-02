@@ -44,6 +44,7 @@ class EditorActivity : AppCompatActivity() {
     private lateinit var timeline: TimelineView
     private lateinit var emptyPreview: android.widget.TextView
     private lateinit var imagePreview: android.widget.ImageView
+    private lateinit var overlayContainer: android.widget.FrameLayout
     private var mediaUri: Uri? = null
     private var durationMs = 1L
     private var trimStartMs = 0L
@@ -57,6 +58,7 @@ class EditorActivity : AppCompatActivity() {
         timeline = findViewById(R.id.timelineView)
         emptyPreview = findViewById(R.id.emptyPreview)
         imagePreview = findViewById(R.id.imagePreview)
+        overlayContainer = findViewById(R.id.overlayContainer)
         mediaUri = intent.getStringExtra(EXTRA_URI)?.let(Uri::parse)
 
         findViewById<android.view.View>(R.id.backButton).setOnClickListener { finish() }
@@ -185,10 +187,49 @@ class EditorActivity : AppCompatActivity() {
             .setView(input)
             .setNegativeButton(R.string.close, null)
             .setPositiveButton(R.string.add_text) { _, _ ->
-                if (input.text.isNotBlank()) {
-                    Toast.makeText(this, R.string.text_added, Toast.LENGTH_SHORT).show()
-                }
+                val value = input.text.toString().trim()
+                if (value.isNotEmpty()) addTextOverlay(value)
             }.show()
+    }
+
+    private fun addTextOverlay(value: String) {
+        val textView = android.widget.TextView(this).apply {
+            text = value
+            setTextColor(android.graphics.Color.WHITE)
+            textSize = 28f
+            setShadowLayer(8f, 0f, 2f, android.graphics.Color.BLACK)
+            setPadding(16, 8, 16, 8)
+            isClickable = true
+        }
+        val params = android.widget.FrameLayout.LayoutParams(
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+            android.view.Gravity.CENTER
+        )
+        overlayContainer.addView(textView, params)
+        textView.setOnTouchListener(object : android.view.View.OnTouchListener {
+            var downX = 0f
+            var downY = 0f
+            var baseX = 0f
+            var baseY = 0f
+            override fun onTouch(v: android.view.View, event: android.view.MotionEvent): Boolean {
+                when (event.actionMasked) {
+                    android.view.MotionEvent.ACTION_DOWN -> {
+                        downX = event.rawX; downY = event.rawY
+                        baseX = v.x; baseY = v.y
+                        return true
+                    }
+                    android.view.MotionEvent.ACTION_MOVE -> {
+                        v.x = baseX + event.rawX - downX
+                        v.y = baseY + event.rawY - downY
+                        return true
+                    }
+                    android.view.MotionEvent.ACTION_UP -> return true
+                }
+                return true
+            }
+        })
+        Toast.makeText(this, R.string.text_added, Toast.LENGTH_SHORT).show()
     }
 
     private fun openAudioPicker() {
