@@ -28,27 +28,22 @@
                 android:contentDescription="@string/settings" android:padding="12dp" />
         </LinearLayout>
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="22dp" android:text="@string/studio"
-            android:textColor="#F4F5FA" android:textSize="14sp" android:textStyle="bold"/>
-
         <LinearLayout
             android:id="@+id/newProjectButton"
-            android:layout_width="match_parent" android:layout_height="176dp"
-            android:layout_marginTop="10dp" android:background="@drawable/bg_editor"
-            android:clickable="true" android:focusable="true" android:gravity="center_vertical"
-            android:orientation="horizontal" android:padding="24dp">
-            <ImageView android:layout_width="58dp" android:layout_height="58dp"
-                android:background="#304A78" android:padding="15dp" android:src="@drawable/ic_video_library"
-                android:contentDescription="@null"/>
-            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:layout_marginStart="20dp" android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="@string/choose_media" android:textColor="#F4F5FA" android:textSize="23sp" android:textStyle="bold"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp" android:text="@string/open_studio"
-                    android:textColor="#A8B5D3" android:textSize="13sp"/>
-            </LinearLayout>
+            android:layout_width="match_parent" android:layout_height="210dp"
+            android:layout_marginTop="24dp" android:background="@drawable/bg_editor"
+            android:clickable="true" android:focusable="true"
+            android:gravity="center" android:orientation="vertical">
+            <ImageView
+                android:layout_width="82dp" android:layout_height="82dp"
+                android:background="#304A78" android:padding="16dp"
+                android:src="@drawable/ic_add"
+                android:contentDescription="@string/new_project"/>
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/new_project"
+                android:textColor="#F7F9FF" android:textSize="21sp" android:textStyle="bold"/>
         </LinearLayout>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -71,7 +66,7 @@
             android:layout_marginTop="10dp" android:background="@drawable/bg_editor"
             android:gravity="center_vertical" android:orientation="horizontal" android:padding="18dp">
             <ImageView android:layout_width="48dp" android:layout_height="48dp"
-                android:background="#171D30" android:padding="12dp" android:src="@drawable/ic_template"/>
+                android:background="#253454" android:padding="12dp" android:src="@drawable/ic_template"/>
             <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:layout_marginStart="16dp" android:text="@string/templates_coming"
                 android:textColor="#9299AD" android:textSize="14sp"/>
