@@ -28,4 +28,16 @@
     <string name="audio_duration_seconds">Duration: %1$d seconds</string>
     <string name="import_audio">Import audio</string>
     <string name="audio_imported">Audio imported</string>
+    <string name="language">Language</string>
+    <string name="settings">Settings</string>
+    <string name="video_editor">Video Editor</string>
+    <string name="studio">Studio</string>
+    <string name="open_studio">Open Studio</string>
+    <string name="saved_projects">Saved projects</string>
+    <string name="no_saved_projects">Your saved projects will appear here</string>
+    <string name="templates">Templates</string>
+    <string name="templates_coming">Ready-made editing templates</string>
+    <string name="choose_language">Choose language</string>
+    <string name="arabic">العربية</string>
+    <string name="english">English</string>
 </resources>
