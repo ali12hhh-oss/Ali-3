@@ -117,7 +117,7 @@ class TimelineView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(Color.rgb(10, 14, 26))
+        canvas.drawColor(Color.rgb(17, 24, 43))
 
         for (row in 0..3) {
             val top = rowTop(row)
@@ -125,15 +125,15 @@ class TimelineView @JvmOverloads constructor(
             if (bottom < 0f || top > height) continue
 
             val active = row == activeRow
-            paint.color = if (active) Color.rgb(25, 38, 65) else Color.rgb(17, 23, 37)
+            paint.color = if (active) Color.rgb(35, 52, 84) else Color.rgb(27, 37, 61)
             canvas.drawRoundRect(5f, top, width - 5f, bottom, 9f, 9f, paint)
 
             // Track handle/label area stays fixed while the clip area scrolls horizontally.
             paint.color = when (row) {
-                0 -> Color.rgb(67, 116, 194)
-                1 -> Color.rgb(125, 91, 177)
-                2 -> Color.rgb(190, 129, 44)
-                else -> Color.rgb(46, 145, 116)
+                0 -> Color.rgb(74, 132, 214)
+                1 -> Color.rgb(145, 108, 205)
+                2 -> Color.rgb(220, 158, 55)
+                else -> Color.rgb(54, 177, 143)
             }
             canvas.drawRoundRect(9f, top + 4f, 64f, bottom - 4f, 7f, 7f, paint)
 
@@ -166,7 +166,7 @@ class TimelineView @JvmOverloads constructor(
             if (right < 66f || left > width) return@forEachIndexed
 
             val selected = project?.selectedClipId == clip.id
-            paint.color = if (selected) Color.rgb(59, 112, 194) else Color.rgb(42, 61, 91)
+            paint.color = if (selected) Color.rgb(67, 126, 212) else Color.rgb(49, 73, 112)
             canvas.drawRoundRect(left, top + 6f, right, bottom - 6f, 7f, 7f, paint)
 
             if (thumb != null && row == 0) {
