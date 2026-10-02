@@ -1,0 +1,8 @@
+<resources>
+    <color name="virexalo_background">#090B14</color>
+    <color name="virexalo_surface">#111528</color>
+    <color name="virexalo_border">#27325B</color>
+    <color name="virexalo_accent">#7C5CFF</color>
+    <color name="virexalo_text">#FFFFFF</color>
+    <color name="virexalo_text_secondary">#AEB6D3</color>
+</resources>
