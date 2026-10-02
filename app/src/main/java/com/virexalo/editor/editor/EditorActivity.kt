@@ -6,20 +6,28 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.transformer.TransformationRequest
-import androidx.media3.transformer.Transformer
-import androidx.media3.transformer.ExportException
+import androidx.media3.transformer.ClippingConfiguration
 import androidx.media3.transformer.Composition
 import androidx.media3.transformer.EditedMediaItem
-import androidx.media3.transformer.ClippingConfiguration
+import androidx.media3.transformer.ExportException
+import androidx.media3.transformer.TransformationRequest
+import androidx.media3.transformer.Transformer
 import androidx.media3.ui.PlayerView
 import com.virexalo.editor.R
-import kotlinx.coroutines.Dispatchers
+import com.virexalo.editor.model.EditorProject
+import com.virexalo.editor.model.EditorTool
+import com.virexalo.editor.model.MediaKind
+import com.virexalo.editor.model.TimelineClip
+import com.virexalo.editor.timeline.TimelineEngine
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -30,12 +38,16 @@ class EditorActivity : AppCompatActivity() {
             Intent(context, EditorActivity::class.java).putExtra(EXTRA_URI, uri.toString())
     }
 
+    private val viewModel: EditorViewModel by viewModels()
     private var player: ExoPlayer? = null
     private lateinit var playerView: PlayerView
     private lateinit var timeline: TimelineView
     private lateinit var emptyPreview: android.widget.TextView
     private var mediaUri: Uri? = null
     private var durationMs = 1L
+    private var trimStartMs = 0L
+    private var trimEndMs = 1L
+    private var currentProject: EditorProject? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,25 +59,42 @@ class EditorActivity : AppCompatActivity() {
 
         findViewById<android.view.View>(R.id.backButton).setOnClickListener { finish() }
         findViewById<android.view.View>(R.id.playButton).setOnClickListener { togglePlayback() }
+        findViewById<android.view.View>(R.id.undoButton).setOnClickListener { viewModel.undo() }
+        findViewById<android.view.View>(R.id.redoButton).setOnClickListener { viewModel.redo() }
         findViewById<android.view.View>(R.id.exportButton).setOnClickListener { exportTrimmed() }
-        findViewById<android.view.View>(R.id.trimTool).setOnClickListener {
-            Toast.makeText(this, R.string.trim, Toast.LENGTH_SHORT).show()
+
+        bindTool(R.id.trimTool, EditorTool.TRIM)
+        bindTool(R.id.splitTool, EditorTool.SPLIT)
+        bindTool(R.id.textTool, EditorTool.TEXT)
+        bindTool(R.id.audioTool, EditorTool.AUDIO)
+        bindTool(R.id.filterTool, EditorTool.FILTERS)
+        bindTool(R.id.effectTool, EditorTool.EFFECTS)
+
+        timeline.onTrimChanged = { start, end ->
+            trimStartMs = start
+            trimEndMs = end
         }
-        findViewById<android.view.View>(R.id.splitTool).setOnClickListener { splitAtPlayhead() }
-        findViewById<android.view.View>(R.id.textTool).setOnClickListener {
-            Toast.makeText(this, R.string.text, Toast.LENGTH_SHORT).show()
-        }
-        findViewById<android.view.View>(R.id.audioTool).setOnClickListener {
-            Toast.makeText(this, R.string.audio, Toast.LENGTH_SHORT).show()
-        }
-        findViewById<android.view.View>(R.id.filterTool).setOnClickListener {
-            Toast.makeText(this, R.string.filters, Toast.LENGTH_SHORT).show()
-        }
-        findViewById<android.view.View>(R.id.effectTool).setOnClickListener {
-            Toast.makeText(this, R.string.effects, Toast.LENGTH_SHORT).show()
+        timeline.onPositionChanged = { position ->
+            player?.seekTo(position)
+            viewModel.setPlayhead(position)
         }
 
         preparePlayer()
+    }
+
+    private fun bindTool(id: Int, tool: EditorTool) {
+        findViewById<android.view.View>(id).setOnClickListener {
+            viewModel.selectTool(tool)
+            when (tool) {
+                EditorTool.TRIM -> timeline.setTrim(trimStartMs, trimEndMs)
+                EditorTool.SPLIT -> splitAtPlayhead()
+                EditorTool.TEXT -> showTextTool()
+                EditorTool.AUDIO -> openAudioPicker()
+                EditorTool.FILTERS -> showCatalog(R.string.filters)
+                EditorTool.EFFECTS -> showCatalog(R.string.effects)
+                else -> Unit
+            }
+        }
     }
 
     private fun preparePlayer() {
@@ -80,16 +109,35 @@ class EditorActivity : AppCompatActivity() {
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_READY) {
                     durationMs = exo.duration.coerceAtLeast(1L)
+                    trimStartMs = 0L
+                    trimEndMs = durationMs
                     timeline.setTimeline(durationMs, exo.currentPosition)
+                    currentProject = createInitialProject(uri)
+                    currentProject?.let(viewModel::start)
                 }
+            }
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                viewModel.setPlaying(isPlaying)
             }
         })
         lifecycleScope.launch {
-            while (true) {
-                kotlinx.coroutines.delay(100)
-                if (!isFinishing) timeline.setPosition(exo.currentPosition)
+            while (isActive && !isFinishing) {
+                delay(100)
+                timeline.setPosition(exo.currentPosition)
+                viewModel.setPlayhead(exo.currentPosition)
             }
         }
+    }
+
+    private fun createInitialProject(uri: Uri): EditorProject {
+        val kind = if (contentResolver.getType(uri).orEmpty().startsWith("image/")) MediaKind.IMAGE else MediaKind.VIDEO
+        val clip = TimelineClip(
+            id = java.util.UUID.randomUUID().toString(),
+            uri = uri.toString(),
+            kind = kind,
+            durationMs = durationMs
+        )
+        return EditorProject(java.util.UUID.randomUUID().toString(), listOf(clip), clip.id)
     }
 
     private fun togglePlayback() {
@@ -97,67 +145,80 @@ class EditorActivity : AppCompatActivity() {
     }
 
     private fun splitAtPlayhead() {
-        val p = player?.currentPosition ?: return
-        if (p <= 0L || p >= durationMs) {
-            Toast.makeText(this, R.string.split, Toast.LENGTH_SHORT).show()
-            return
+        val project = currentProject ?: return
+        val clip = project.selectedClip() ?: return
+        val position = player?.currentPosition ?: return
+        if (position <= trimStartMs || position >= trimEndMs) return
+        val local = position - clip.startOnTimelineMs
+        if (local <= 0L || local >= clip.durationMs) return
+        val next = TimelineEngine.split(project, clip.id, local)
+        currentProject = next
+        viewModel.applyProject(next)
+        Toast.makeText(this, R.string.split_done, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showTextTool() {
+        val input = android.widget.EditText(this).apply {
+            hint = getString(R.string.enter_text)
+            setSingleLine(false)
         }
-        Toast.makeText(this, "Split at " + (p / 1000) + "s", Toast.LENGTH_SHORT).show()
+        AlertDialog.Builder(this)
+            .setTitle(R.string.text)
+            .setView(input)
+            .setNegativeButton(R.string.close, null)
+            .setPositiveButton(R.string.add_text) { _, _ ->
+                if (input.text.isNotBlank()) {
+                    Toast.makeText(this, R.string.text_added, Toast.LENGTH_SHORT).show()
+                }
+            }.show()
+    }
+
+    private fun openAudioPicker() {
+        startActivity(Intent.createChooser(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "audio/*"
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }, getString(R.string.audio)))
+    }
+
+    private fun showCatalog(title: Int) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setItems(
+                if (title == R.string.filters)
+                    arrayOf("Original", "Mono", "Contrast", "Warm", "Soft")
+                else
+                    arrayOf("None", "Fade", "Flash", "Shake", "Zoom"),
+                null
+            )
+            .setNegativeButton(R.string.close, null)
+            .show()
     }
 
     private fun exportTrimmed() {
         val uri = mediaUri ?: return
-        lifecycleScope.launch(Dispatchers.IO) {
-            val output = File(
-                getExternalFilesDir(Environment.DIRECTORY_MOVIES),
-                "Virexalo_" + System.currentTimeMillis() + ".mp4"
+        if (trimEndMs <= trimStartMs) return
+        val outputDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES) ?: filesDir
+        val output = File(outputDir, "Virexalo_${System.currentTimeMillis()}.mp4")
+        val clip = ClippingConfiguration.Builder()
+            .setStartPositionMs(trimStartMs)
+            .setEndPositionMs(trimEndMs)
+            .build()
+        val media = MediaItem.Builder().setUri(uri).setClippingConfiguration(clip).build()
+        val item = EditedMediaItem.Builder(media).build()
+        val transformer = Transformer.Builder(this)
+            .setTransformationRequest(
+                TransformationRequest.Builder().setVideoMimeType("video/avc").build()
             )
-            val clip = ClippingConfiguration.Builder()
-                .setStartPositionMs(0)
-                .setEndPositionMs(durationMs)
-                .build()
-            val item = EditedMediaItem.Builder(
-                MediaItem.Builder()
-                    .setUri(uri)
-                    .setClippingConfiguration(clip)
-                    .build()
-            ).build()
-            val transformer = Transformer.Builder(this@EditorActivity)
-                .setTransformationRequest(
-                    TransformationRequest.Builder()
-                        .setVideoMimeType("video/avc")
-                        .build()
-                )
-                .addListener(object : Transformer.Listener {
-                    override fun onCompleted(
-                        composition: Composition,
-                        exportResult: androidx.media3.transformer.ExportResult
-                    ) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@EditorActivity,
-                                R.string.export_done,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-
-                    override fun onError(
-                        composition: Composition,
-                        exportResult: androidx.media3.transformer.ExportResult,
-                        exportException: ExportException
-                    ) {
-                        runOnUiThread {
-                            Toast.makeText(
-                                this@EditorActivity,
-                                R.string.export_failed,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                }).build()
-            transformer.start(item, output.absolutePath)
-        }
+            .addListener(object : Transformer.Listener {
+                override fun onCompleted(composition: Composition, exportResult: androidx.media3.transformer.ExportResult) {
+                    Toast.makeText(this@EditorActivity, R.string.export_done, Toast.LENGTH_LONG).show()
+                }
+                override fun onError(composition: Composition, exportResult: androidx.media3.transformer.ExportResult, exportException: ExportException) {
+                    Toast.makeText(this@EditorActivity, R.string.export_failed, Toast.LENGTH_LONG).show()
+                }
+            }).build()
+        player?.pause()
+        transformer.start(item, output.absolutePath)
     }
 
     override fun onStop() {
