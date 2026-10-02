@@ -31,6 +31,9 @@ import androidx.media3.effect.Brightness
 import androidx.media3.effect.Contrast
 import androidx.media3.effect.HslAdjustment
 import androidx.media3.effect.Crop
+import androidx.media3.effect.TextOverlay
+import androidx.media3.effect.OverlayEffect
+import androidx.media3.effect.StaticOverlaySettings
 import androidx.media3.transformer.EditedMediaItem
 import androidx.media3.transformer.ExportException
 import androidx.media3.transformer.Transformer
@@ -482,6 +485,18 @@ class EditorActivity : AppCompatActivity() {
             2 -> list += Crop(-0.8f, 0.8f, -1f, 1f)
             3 -> list += Crop(-0.5625f, 0.5625f, -1f, 1f)
             4 -> list += Crop(-1f, 1f, -0.5625f, 0.5625f)
+        }
+        val text = activeText?.text?.toString()?.trim().orEmpty()
+        if (text.isNotEmpty()) {
+            val overlay = TextOverlay.createStaticTextOverlay(
+                android.text.SpannableString(text),
+                StaticOverlaySettings.Builder()
+                    .setBackgroundFrameAnchor(0f, 0f)
+                    .setOverlayFrameAnchor(0f, 0f)
+                    .setScale(0.75f, 0.75f)
+                    .build()
+            )
+            list += OverlayEffect(listOf(overlay))
         }
         return list
     }
