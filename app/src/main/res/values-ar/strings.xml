@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Virexalo</string>
+    <string name="new_project">مشروع جديد</string>
+    <string name="choose_media">اختر فيديو أو صورة</string>
+    <string name="editor">المحرر</string>
+    <string name="play">تشغيل</string>
+    <string name="pause">إيقاف</string>
+    <string name="trim">قص</string>
+    <string name="split">تقسيم</string>
+    <string name="text">نص</string>
+    <string name="audio">صوت</string>
+    <string name="filters">فلاتر</string>
+    <string name="effects">تأثيرات</string>
+    <string name="export">تصدير</string>
+    <string name="undo">تراجع</string>
+    <string name="redo">إعادة</string>
+    <string name="close">إغلاق</string>
+    <string name="exporting">جارٍ التصدير…</string>
+    <string name="export_done">اكتمل التصدير</string>
+    <string name="export_failed">فشل التصدير</string>
+    <string name="media_files">ملفات الوسائط</string>
+    <string name="no_media">اختر فيديو أو صورة للبدء</string>
+</resources>
