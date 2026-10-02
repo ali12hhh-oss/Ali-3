@@ -20,4 +20,8 @@
     <string name="export_failed">فشل التصدير</string>
     <string name="media_files">ملفات الوسائط</string>
     <string name="no_media">اختر فيديو أو صورة للبدء</string>
+    <string name="split_done">تم تقسيم المقطع</string>
+    <string name="enter_text">أدخل النص</string>
+    <string name="add_text">إضافة النص</string>
+    <string name="text_added">تمت إضافة طبقة النص</string>
 </resources>
