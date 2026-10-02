@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.newProjectButton).setOnClickListener {
+        findViewById<android.view.View>(R.id.newProjectButton).setOnClickListener {
             mediaPicker.launch(arrayOf("video/*", "image/*"))
         }
     }
