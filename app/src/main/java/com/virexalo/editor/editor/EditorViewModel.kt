@@ -18,6 +18,11 @@ class EditorViewModel : ViewModel() {
         _state.value = EditorState(project = project)
     }
 
+    fun applyProject(project: EditorProject) {
+        history?.apply(project)
+        _state.value = _state.value?.copy(project = project)
+    }
+
     fun selectTool(tool: EditorTool) {
         toolController.select(tool)
         _state.value = _state.value?.copy(tool = tool)
@@ -39,14 +44,12 @@ class EditorViewModel : ViewModel() {
     }
 
     fun undo() {
-        val h = history ?: return
-        val project = h.undo() ?: return
+        val project = history?.undo() ?: return
         _state.value = _state.value?.copy(project = project)
     }
 
     fun redo() {
-        val h = history ?: return
-        val project = h.redo() ?: return
+        val project = history?.redo() ?: return
         _state.value = _state.value?.copy(project = project)
     }
 }
