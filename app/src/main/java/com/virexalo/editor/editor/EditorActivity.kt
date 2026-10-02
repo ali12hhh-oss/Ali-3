@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.C
+import androidx.media3.common.audio.SpeedProvider
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.transformer.Composition
 import androidx.media3.transformer.Effects
@@ -628,9 +630,15 @@ class EditorActivity : AppCompatActivity() {
             .setEndPositionMs(trimEndMs)
             .build()
         val media = MediaItem.Builder().setUri(uri).setClippingConfiguration(clip).build()
-        val item = EditedMediaItem.Builder(media)
+        val itemBuilder = EditedMediaItem.Builder(media)
             .setEffects(Effects(emptyList(), createVideoEffects()))
-            .build()
+        if (speed != 1f) {
+            itemBuilder.setSpeed(object : SpeedProvider {
+                override fun getNextSpeedChangeTimeUs(timeUs: Long): Long = C.TIME_UNSET
+                override fun getSpeed(timeUs: Long): Float = speed
+            })
+        }
+        val item = itemBuilder.build()
         val transformer = Transformer.Builder(this)
             .setVideoMimeType("video/avc")
             .addListener(object : Transformer.Listener {
