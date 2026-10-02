@@ -71,7 +71,7 @@ class EditorActivity : AppCompatActivity() {
     private lateinit var liveTextInput: android.widget.EditText
     private lateinit var textSizeSeek: android.widget.SeekBar
     private lateinit var fontRow: android.widget.LinearLayout
-    private var activeText: android.widget.EditText? = null
+    private var activeText: DraggableTextView? = null
     private var mediaUri: Uri? = null
     private var durationMs = 1L
     private var trimStartMs = 0L
@@ -409,11 +409,11 @@ class EditorActivity : AppCompatActivity() {
                     val cm = android.graphics.ColorMatrix()
                     when (i) {
                         1 -> cm.setSaturation(0f)
-                        2 -> cm.setColorScale(1.08f, 0.96f, 0.82f, 1f)
-                        3 -> cm.setColorScale(0.84f, 0.95f, 1.10f, 1f)
+                        2 -> cm.set(floatArrayOf(1.08f,0f,0f,0f,0f, 0f,0.96f,0f,0f,0f, 0f,0f,0.82f,0f,0f, 0f,0f,0f,1f,0f))
+                        3 -> cm.set(floatArrayOf(0.84f,0f,0f,0f,0f, 0f,0.95f,0f,0f,0f, 0f,0f,1.10f,0f,0f, 0f,0f,0f,1f,0f))
                         4 -> cm.setSaturation(1.45f)
                     }
-                    imagePreviewPaint(preview, cm)
+                    preview.colorFilter = android.graphics.ColorMatrixColorFilter(cm)
                 }
             }
             val label = android.widget.TextView(this).apply {
@@ -499,7 +499,7 @@ class EditorActivity : AppCompatActivity() {
                     .setScale(0.75f, 0.75f)
                     .build()
             )
-            list += OverlayEffect(ImmutableList.of(overlay))
+            list += OverlayEffect(mutableListOf<androidx.media3.effect.TextureOverlay>(overlay))
         }
         return list
     }
