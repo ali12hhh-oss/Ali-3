@@ -8,6 +8,7 @@
 
         <LinearLayout
             android:layout_width="match_parent" android:layout_height="58dp"
+            android:layoutDirection="ltr"
             android:gravity="center_vertical" android:orientation="horizontal">
             <ImageButton
                 android:id="@+id/languageButton" android:layout_width="48dp" android:layout_height="48dp"
