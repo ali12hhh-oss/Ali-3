@@ -6,6 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import com.virexalo.editor.audio.AudioClip
+import android.media.MediaMetadataRetriever
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -50,6 +53,10 @@ class EditorActivity : AppCompatActivity() {
     private var trimStartMs = 0L
     private var trimEndMs = 1L
     private var currentProject: EditorProject? = null
+    private val audioPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) prepareAudioImport(uri)
+    }
+    private val audioClips = mutableListOf<AudioClip>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -233,10 +240,46 @@ class EditorActivity : AppCompatActivity() {
     }
 
     private fun openAudioPicker() {
-        startActivity(Intent.createChooser(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            type = "audio/*"
-            addCategory(Intent.CATEGORY_OPENABLE)
-        }, getString(R.string.audio)))
+        audioPicker.launch(arrayOf("audio/*"))
+    }
+
+    private fun prepareAudioImport(uri: Uri) {
+        val retriever = MediaMetadataRetriever()
+        val duration = runCatching {
+            retriever.setDataSource(this, uri)
+            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 1L
+        }.getOrDefault(1L)
+        retriever.release()
+        val startInput = android.widget.EditText(this).apply { hint = "0"; inputType = 2 }
+        val endInput = android.widget.EditText(this).apply {
+            hint = (duration / 1000L).toString()
+            inputType = 2
+        }
+        val box = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(32, 8, 32, 8)
+            addView(startInput)
+            addView(endInput)
+        }
+        AlertDialog.Builder(this)
+            .setTitle(R.string.audio_trim_before_import)
+            .setMessage(getString(R.string.audio_duration_seconds, duration / 1000L))
+            .setView(box)
+            .setNegativeButton(R.string.close, null)
+            .setPositiveButton(R.string.import_audio) { _, _ ->
+                val start = (startInput.text.toString().toLongOrNull() ?: 0L) * 1000L
+                val end = (endInput.text.toString().toLongOrNull() ?: (duration / 1000L)) * 1000L
+                val safeStart = start.coerceIn(0L, duration - 1L)
+                val safeEnd = end.coerceIn(safeStart + 1L, duration)
+                audioClips += AudioClip(
+                    id = java.util.UUID.randomUUID().toString(),
+                    uri = uri.toString(),
+                    sourceStartMs = safeStart,
+                    sourceEndMs = safeEnd,
+                    startOnTimelineMs = player?.currentPosition ?: 0L
+                )
+                Toast.makeText(this, R.string.audio_imported, Toast.LENGTH_SHORT).show()
+            }.show()
     }
 
     private fun showCatalog(title: Int) {
