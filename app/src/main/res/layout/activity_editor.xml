@@ -1,106 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:background="#0B0D16">
+    android:background="#090B14">
 
     <LinearLayout
-        android:layout_width="match_parent" android:layout_height="58dp"
-        android:gravity="center_vertical" android:paddingHorizontal="10dp">
-        <ImageButton android:id="@+id/backButton" android:layout_width="44dp" android:layout_height="44dp"
-            android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:tint="#F2F3F7" android:contentDescription="@string/close"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-            android:gravity="center" android:text="@string/editor" android:textColor="#F2F3F7"
-            android:textSize="17sp" android:textStyle="bold"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/exportButton" android:layout_width="92dp" android:layout_height="42dp"
-            android:text="@string/export" android:textSize="12sp"
-            app:cornerRadius="20dp"/>
-    </LinearLayout>
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
-        android:layout_marginHorizontal="10dp" android:background="#050609">
-
-        <androidx.media3.ui.PlayerView
-            android:id="@+id/playerView" android:layout_width="match_parent" android:layout_height="match_parent"
-            android:background="#050609" app:show_buffering="when_playing" app:use_controller="false"/>
-
-        <ImageView android:id="@+id/imagePreview" android:layout_width="match_parent" android:layout_height="match_parent"
-            android:visibility="gone" android:scaleType="fitCenter" android:background="#050609"
-            android:contentDescription="@string/media_files"/>
-        <FrameLayout android:id="@+id/overlayContainer" android:layout_width="match_parent" android:layout_height="match_parent"
-            android:clickable="false"/>
-        <TextView android:id="@+id/emptyPreview" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_gravity="center" android:text="@string/no_media" android:textColor="#737B91" android:textSize="14sp"/>
-        <ImageButton android:id="@+id/fullscreenButton" android:layout_width="40dp" android:layout_height="40dp"
-            android:layout_gravity="bottom|end" android:layout_margin="12dp"
-            android:background="@drawable/bg_editor" android:src="@android:drawable/ic_menu_view"
-            android:tint="#F2F3F7" android:contentDescription="Fullscreen"/>
-    </FrameLayout>
-
-    <LinearLayout android:layout_width="match_parent" android:layout_height="54dp"
-        android:gravity="center" android:orientation="horizontal">
-        <ImageButton android:id="@+id/undoButton" android:layout_width="46dp" android:layout_height="46dp"
-            android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_revert"
-            android:tint="#AAB0C0" android:contentDescription="@string/undo"/>
-        <ImageButton android:id="@+id/playButton" android:layout_width="52dp" android:layout_height="52dp"
-            android:background="@android:color/transparent" android:src="@android:drawable/ic_media_play"
-            android:tint="#F2F3F7" android:contentDescription="@string/play"/>
-        <ImageButton android:id="@+id/redoButton" android:layout_width="46dp" android:layout_height="46dp"
-            android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_rotate"
-            android:tint="#AAB0C0" android:contentDescription="@string/redo"/>
-    </LinearLayout>
-
-    <com.virexalo.editor.editor.TimelineView
-        android:id="@+id/timelineView" android:layout_width="match_parent" android:layout_height="96dp"
-        android:layout_marginHorizontal="10dp" android:layout_marginBottom="6dp" android:background="@drawable/bg_editor"/>
-
-    <LinearLayout android:id="@+id/textEditorBar" android:layout_width="match_parent" android:layout_height="112dp"
-        android:orientation="vertical" android:padding="6dp" android:visibility="gone" android:background="#121729">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="50dp" android:gravity="center_vertical">
-            <EditText android:id="@+id/liveTextInput" android:layout_width="0dp" android:layout_height="44dp"
-                android:layout_weight="1" android:hint="@string/enter_text" android:textColor="#FFFFFF"
-                android:textColorHint="#788198" android:singleLine="false" android:background="@drawable/bg_editor"
-                android:paddingHorizontal="12dp"/>
-            <SeekBar android:id="@+id/textSizeSeek" android:layout_width="110dp" android:layout_height="44dp"
-                android:max="72" android:progress="28"/>
-            <ImageButton android:id="@+id/textDeleteButton" android:layout_width="44dp" android:layout_height="44dp"
-                android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_delete" android:tint="#FFFFFF"/>
-            <ImageButton android:id="@+id/textCloseButton" android:layout_width="44dp" android:layout_height="44dp"
-                android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:tint="#FFFFFF" android:contentDescription="@string/close"/>
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="56dp"
+            android:gravity="center_vertical" android:paddingHorizontal="10dp">
+            <ImageButton android:id="@+id/backButton" android:layout_width="44dp" android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless" android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:tint="#F4F5F8" android:contentDescription="@string/close"/>
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:gravity="center" android:text="@string/editor" android:textColor="#F4F5F8"
+                android:textSize="17sp" android:textStyle="bold"/>
+            <ImageButton android:id="@+id/undoButton" android:layout_width="40dp" android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless" android:src="@android:drawable/ic_menu_revert"
+                android:tint="#AEB6D3" android:contentDescription="@string/undo"/>
+            <ImageButton android:id="@+id/redoButton" android:layout_width="40dp" android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless" android:src="@android:drawable/ic_menu_rotate"
+                android:tint="#AEB6D3" android:contentDescription="@string/redo"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/exportButton"
+                android:layout_width="88dp" android:layout_height="38dp" android:text="@string/export"
+                android:textSize="12sp" app:cornerRadius="19dp"/>
         </LinearLayout>
-        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="52dp" android:scrollbars="none">
-            <LinearLayout android:id="@+id/fontRow" android:layout_width="wrap_content" android:layout_height="match_parent"
-                android:gravity="center_vertical" android:orientation="horizontal"/>
+
+        <FrameLayout
+            android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+            android:layout_marginHorizontal="10dp" android:background="#050609">
+
+            <androidx.media3.ui.PlayerView android:id="@+id/playerView"
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:background="#050609" app:use_controller="false"
+                app:resize_mode="fit"/>
+
+            <ImageView android:id="@+id/imagePreview" android:layout_width="match_parent" android:layout_height="match_parent"
+                android:visibility="gone" android:scaleType="fitCenter" android:background="#050609"/>
+
+            <FrameLayout android:id="@+id/overlayContainer" android:layout_width="match_parent" android:layout_height="match_parent"
+                android:clipChildren="false" android:clipToPadding="false"/>
+
+            <TextView android:id="@+id/emptyPreview" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center" android:text="@string/no_media" android:textColor="#737B91" android:textSize="14sp"/>
+
+            <ImageButton android:id="@+id/fullscreenButton" android:layout_width="42dp" android:layout_height="42dp"
+                android:layout_gravity="bottom|end" android:layout_margin="12dp"
+                android:background="@drawable/bg_editor" android:src="@android:drawable/ic_menu_view"
+                android:tint="#F4F5F8" android:contentDescription="Fullscreen"/>
+        </FrameLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+            android:gravity="center_vertical" android:paddingHorizontal="12dp">
+            <TextView android:id="@+id/currentTimeText" android:layout_width="72dp" android:layout_height="wrap_content"
+                android:text="0:00" android:textColor="#AEB6D3" android:textSize="12sp"/>
+            <ImageButton android:id="@+id/playButton" android:layout_width="48dp" android:layout_height="48dp"
+                android:layout_gravity="center" android:background="@drawable/bg_editor"
+                android:src="@android:drawable/ic_media_play" android:tint="#F4F5F8"
+                android:contentDescription="@string/play"/>
+            <TextView android:id="@+id/totalTimeText" android:layout_width="72dp" android:layout_height="wrap_content"
+                android:gravity="end" android:text="0:00" android:textColor="#AEB6D3" android:textSize="12sp"/>
+        </LinearLayout>
+
+        <com.virexalo.editor.editor.TimelineView android:id="@+id/timelineView"
+            android:layout_width="match_parent" android:layout_height="142dp"
+            android:layout_marginHorizontal="8dp" android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_editor"/>
+
+        <LinearLayout android:id="@+id/toolPanel" android:layout_width="match_parent" android:layout_height="92dp"
+            android:orientation="vertical" android:paddingHorizontal="12dp" android:paddingVertical="6dp"
+            android:visibility="gone" android:background="#111528">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="34dp" android:gravity="center_vertical">
+                <TextView android:id="@+id/toolTitle" android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:textColor="#F4F5F8" android:textStyle="bold" android:textSize="13sp"/>
+                <ImageButton android:id="@+id/toolCloseButton" android:layout_width="36dp" android:layout_height="36dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:tint="#F4F5F8" android:contentDescription="@string/close"/>
+            </LinearLayout>
+            <SeekBar android:id="@+id/toolSeek" android:layout_width="match_parent" android:layout_height="40dp"
+                android:max="100" android:progress="50"/>
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/textEditorBar" android:layout_width="match_parent" android:layout_height="96dp"
+            android:orientation="vertical" android:padding="6dp" android:visibility="gone" android:background="#111528">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical">
+                <EditText android:id="@+id/liveTextInput" android:layout_width="0dp" android:layout_height="44dp"
+                    android:layout_weight="1" android:hint="@string/enter_text" android:textColor="#FFFFFF"
+                    android:textColorHint="#788198" android:singleLine="true" android:background="@drawable/bg_editor"
+                    android:paddingHorizontal="12dp"/>
+                <SeekBar android:id="@+id/textSizeSeek" android:layout_width="100dp" android:layout_height="44dp"
+                    android:max="72" android:progress="28"/>
+                <ImageButton android:id="@+id/textDeleteButton" android:layout_width="40dp" android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:src="@android:drawable/ic_menu_delete" android:tint="#F4F5F8"/>
+                <ImageButton android:id="@+id/textCloseButton" android:layout_width="40dp" android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:src="@android:drawable/ic_menu_close_clear_cancel" android:tint="#F4F5F8"/>
+            </LinearLayout>
+            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="42dp" android:scrollbars="none">
+                <LinearLayout android:id="@+id/fontRow" android:layout_width="wrap_content" android:layout_height="match_parent"
+                    android:gravity="center_vertical" android:orientation="horizontal"/>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <HorizontalScrollView android:id="@+id/editingControlsScroll"
+            android:layout_width="match_parent" android:layout_height="78dp" android:scrollbars="none"
+            android:background="#0F1322">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:gravity="center_vertical" android:paddingHorizontal="8dp">
+
+                <com.google.android.material.button.MaterialButton android:id="@+id/trimTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/trim"
+                    app:icon="@android:drawable/ic_menu_crop" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/splitTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/split"
+                    app:icon="@android:drawable/ic_menu_more" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/textTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/text"
+                    app:icon="@android:drawable/ic_menu_edit" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/overlayTool"
+                    android:layout_width="84dp" android:layout_height="60dp" android:text="Overlay"
+                    app:icon="@android:drawable/ic_menu_gallery" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/drawTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="Draw"
+                    app:icon="@android:drawable/ic_menu_edit" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/audioTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/audio"
+                    app:icon="@android:drawable/ic_btn_speak_now" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/voiceTool"
+                    android:layout_width="84dp" android:layout_height="60dp" android:text="Voice"
+                    app:icon="@android:drawable/ic_btn_speak_now" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/subtitlesTool"
+                    android:layout_width="88dp" android:layout_height="60dp" android:text="Subtitles"
+                    app:icon="@android:drawable/ic_menu_info_details" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/cropTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="Crop"
+                    app:icon="@android:drawable/ic_menu_crop" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/canvasTool"
+                    android:layout_width="86dp" android:layout_height="60dp" android:text="Canvas"
+                    app:icon="@android:drawable/ic_menu_view" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/speedTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="Speed"
+                    app:icon="@android:drawable/ic_media_ff" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/filterTool"
+                    android:layout_width="84dp" android:layout_height="60dp" android:text="@string/filters"
+                    app:icon="@android:drawable/ic_menu_slideshow" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/effectTool"
+                    android:layout_width="84dp" android:layout_height="60dp" android:text="@string/effects"
+                    app:icon="@android:drawable/ic_menu_rotate" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/transitionTool"
+                    android:layout_width="94dp" android:layout_height="60dp" android:text="Transition"
+                    app:icon="@android:drawable/ic_menu_sort_by_size" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/maskTool"
+                    android:layout_width="76dp" android:layout_height="60dp" android:text="Mask"
+                    app:icon="@android:drawable/ic_menu_gallery" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/chromaTool"
+                    android:layout_width="90dp" android:layout_height="60dp" android:text="Chroma"
+                    app:icon="@android:drawable/ic_menu_camera" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <com.google.android.material.button.MaterialButton android:id="@+id/keyframeTool"
+                    android:layout_width="90dp" android:layout_height="60dp" android:text="Keyframe"
+                    app:icon="@android:drawable/ic_menu_compass" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+            </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
 
-    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="68dp"
-        android:scrollbars="none" android:fillViewport="false">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-            android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp">
-            <com.google.android.material.button.MaterialButton android:id="@+id/trimTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/trim" app:cornerRadius="18dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/splitTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/split" app:cornerRadius="18dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/textTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/text" app:cornerRadius="18dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/audioTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/audio" app:cornerRadius="18dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/filterTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/filters" app:cornerRadius="18dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/effectTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/effects" app:cornerRadius="18dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/cropTool" android:layout_width="82dp" android:layout_height="50dp" android:text="Crop" app:cornerRadius="18dp"/>
-            <com.google.android.material.button.MaterialButton android:id="@+id/speedTool" android:layout_width="82dp" android:layout_height="50dp" android:text="Speed" app:cornerRadius="18dp"/>
-        </LinearLayout>
-    </HorizontalScrollView>
     <FrameLayout android:id="@+id/fullscreenOverlay" android:layout_width="match_parent" android:layout_height="match_parent"
         android:visibility="gone" android:background="#050609">
         <androidx.media3.ui.PlayerView android:id="@+id/fullscreenPlayer" android:layout_width="match_parent" android:layout_height="match_parent"
             android:background="#050609" app:use_controller="false"/>
         <ImageButton android:id="@+id/fullscreenCloseButton" android:layout_width="46dp" android:layout_height="46dp"
             android:layout_gravity="top|end" android:layout_margin="14dp" android:background="@drawable/bg_editor"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" android:tint="#F2F3F7" android:contentDescription="@string/close"/>
+            android:src="@android:drawable/ic_menu_close_clear_cancel" android:tint="#F4F5F8"/>
         <ImageButton android:id="@+id/fullscreenPlayButton" android:layout_width="58dp" android:layout_height="58dp"
             android:layout_gravity="center" android:background="@drawable/bg_editor" android:src="@android:drawable/ic_media_play"
-            android:tint="#F2F3F7" android:contentDescription="@string/play"/>
+            android:tint="#F4F5F8"/>
     </FrameLayout>
-</LinearLayout>
+</FrameLayout>
