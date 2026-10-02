@@ -44,4 +44,5 @@
     <string name="studio_empty">No media found</string>
     <string name="settings_title">Settings</string>
     <string name="language_setting">Language</string>
+    <string name="save">Save</string>
 </resources>
