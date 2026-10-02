@@ -10,6 +10,7 @@
     </LinearLayout>
     <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:padding="10dp">
         <androidx.media3.ui.PlayerView android:id="@+id/playerView" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#000000" app:show_buffering="when_playing" app:use_controller="false" />
+        <ImageView android:id="@+id/imagePreview" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone" android:scaleType="fitCenter" android:background="#000000" android:contentDescription="@string/media_files" />
         <TextView android:id="@+id/emptyPreview" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="@string/no_media" android:textColor="#8E97B8" android:textSize="15sp" />
     </FrameLayout>
     <LinearLayout android:layout_width="match_parent" android:layout_height="58dp" android:gravity="center" android:orientation="horizontal">
