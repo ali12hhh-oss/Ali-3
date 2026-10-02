@@ -273,7 +273,7 @@ class EditorActivity : AppCompatActivity() {
         activeText?.let {
             it.beginBatchEdit()
             liveTextInput.setText(it.text)
-            liveTextInput.setSelection(liveTextInput.length)
+            liveTextInput.setSelection(liveTextInput.length())
             it.endBatchEdit()
             liveTextInput.requestFocus()
             (getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
@@ -401,20 +401,19 @@ class EditorActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_HORIZONTAL
                 setPadding(dp(5), dp(4), dp(5), dp(4))
             }
-            val preview = android.widget.ImageView(this).apply {
-                layoutParams = android.widget.LinearLayout.LayoutParams(dp(82), dp(58))
-                scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
-                setImageBitmap(frame)
-                if (i != 0) {
-                    val cm = android.graphics.ColorMatrix()
-                    when (i) {
-                        1 -> cm.setSaturation(0f)
-                        2 -> cm.set(floatArrayOf(1.08f,0f,0f,0f,0f, 0f,0.96f,0f,0f,0f, 0f,0f,0.82f,0f,0f, 0f,0f,0f,1f,0f))
-                        3 -> cm.set(floatArrayOf(0.84f,0f,0f,0f,0f, 0f,0.95f,0f,0f,0f, 0f,0f,1.10f,0f,0f, 0f,0f,0f,1f,0f))
-                        4 -> cm.setSaturation(1.45f)
-                    }
-                    this.colorFilter = android.graphics.ColorMatrixColorFilter(cm)
+            val preview = android.widget.ImageView(this)
+            preview.layoutParams = android.widget.LinearLayout.LayoutParams(dp(82), dp(58))
+            preview.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+            preview.setImageBitmap(frame)
+            if (i != 0) {
+                val cm = android.graphics.ColorMatrix()
+                when (i) {
+                    1 -> cm.setSaturation(0f)
+                    2 -> cm.set(floatArrayOf(1.08f,0f,0f,0f,0f, 0f,0.96f,0f,0f,0f, 0f,0f,0.82f,0f,0f, 0f,0f,0f,1f,0f))
+                    3 -> cm.set(floatArrayOf(0.84f,0f,0f,0f,0f, 0f,0.95f,0f,0f,0f, 0f,0f,1.10f,0f,0f, 0f,0f,0f,1f,0f))
+                    4 -> cm.setSaturation(1.45f)
                 }
+                preview.colorFilter = android.graphics.ColorMatrixColorFilter(cm)
             }
             val label = android.widget.TextView(this).apply {
                 text = names[i]
