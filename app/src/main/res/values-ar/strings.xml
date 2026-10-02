@@ -28,4 +28,16 @@
     <string name="audio_duration_seconds">المدة: %1$d ثانية</string>
     <string name="import_audio">استيراد الصوت</string>
     <string name="audio_imported">تم استيراد الصوت</string>
+    <string name="language">اللغة</string>
+    <string name="settings">الإعدادات</string>
+    <string name="video_editor">محرر فيديو</string>
+    <string name="studio">الاستوديو</string>
+    <string name="open_studio">فتح الاستوديو</string>
+    <string name="saved_projects">المشاريع المحفوظة</string>
+    <string name="no_saved_projects">ستظهر مشاريعك المحفوظة هنا</string>
+    <string name="templates">القوالب</string>
+    <string name="templates_coming">قوالب تحرير جاهزة</string>
+    <string name="choose_language">اختيار اللغة</string>
+    <string name="arabic">العربية</string>
+    <string name="english">English</string>
 </resources>
