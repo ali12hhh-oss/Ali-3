@@ -2,49 +2,87 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:background="#090B14">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical" android:paddingHorizontal="8dp">
-        <ImageButton android:id="@+id/backButton" android:layout_width="44dp" android:layout_height="44dp" android:background="@android:color/transparent" android:contentDescription="@string/close" android:src="@android:drawable/ic_menu_close_clear_cancel" android:tint="#FFFFFF" />
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/editor" android:textColor="#FFFFFF" android:textSize="19sp" android:textStyle="bold" android:gravity="center" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/exportButton" android:layout_width="wrap_content" android:layout_height="44dp" android:text="@string/export" />
+    android:orientation="vertical" android:background="#0B0D16">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="58dp"
+        android:gravity="center_vertical" android:paddingHorizontal="10dp">
+        <ImageButton android:id="@+id/backButton" android:layout_width="44dp" android:layout_height="44dp"
+            android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="#F2F3F7" android:contentDescription="@string/close"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:gravity="center" android:text="@string/editor" android:textColor="#F2F3F7"
+            android:textSize="17sp" android:textStyle="bold"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/exportButton" android:layout_width="92dp" android:layout_height="42dp"
+            android:text="@string/export" android:textSize="12sp"
+            app:cornerRadius="20dp"/>
     </LinearLayout>
 
-    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:padding="8dp">
-        <androidx.media3.ui.PlayerView android:id="@+id/playerView" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#000000" app:show_buffering="when_playing" app:use_controller="false" />
-        <ImageView android:id="@+id/imagePreview" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone" android:scaleType="fitCenter" android:background="#000000" android:contentDescription="@string/media_files" />
-        <FrameLayout android:id="@+id/overlayContainer" android:layout_width="match_parent" android:layout_height="match_parent" android:clickable="false" />
-        <TextView android:id="@+id/emptyPreview" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="@string/no_media" android:textColor="#8E97B8" android:textSize="15sp" />
+    <FrameLayout
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:layout_marginHorizontal="10dp" android:background="#050609">
+
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/playerView" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:background="#050609" app:show_buffering="when_playing" app:use_controller="false"/>
+
+        <ImageView android:id="@+id/imagePreview" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:visibility="gone" android:scaleType="fitCenter" android:background="#050609"
+            android:contentDescription="@string/media_files"/>
+        <FrameLayout android:id="@+id/overlayContainer" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:clickable="false"/>
+        <TextView android:id="@+id/emptyPreview" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center" android:text="@string/no_media" android:textColor="#737B91" android:textSize="14sp"/>
     </FrameLayout>
 
-    <LinearLayout android:id="@+id/textEditorBar" android:layout_width="match_parent" android:layout_height="112dp" android:orientation="vertical" android:padding="6dp" android:visibility="gone" android:background="#11172A">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="54dp"
+        android:gravity="center" android:orientation="horizontal">
+        <ImageButton android:id="@+id/undoButton" android:layout_width="46dp" android:layout_height="46dp"
+            android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_revert"
+            android:tint="#AAB0C0" android:contentDescription="@string/undo"/>
+        <ImageButton android:id="@+id/playButton" android:layout_width="52dp" android:layout_height="52dp"
+            android:background="@android:color/transparent" android:src="@android:drawable/ic_media_play"
+            android:tint="#F2F3F7" android:contentDescription="@string/play"/>
+        <ImageButton android:id="@+id/redoButton" android:layout_width="46dp" android:layout_height="46dp"
+            android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_rotate"
+            android:tint="#AAB0C0" android:contentDescription="@string/redo"/>
+    </LinearLayout>
+
+    <com.virexalo.editor.editor.TimelineView
+        android:id="@+id/timelineView" android:layout_width="match_parent" android:layout_height="96dp"
+        android:layout_marginHorizontal="10dp" android:layout_marginBottom="6dp" android:background="@drawable/bg_editor"/>
+
+    <LinearLayout android:id="@+id/textEditorBar" android:layout_width="match_parent" android:layout_height="112dp"
+        android:orientation="vertical" android:padding="6dp" android:visibility="gone" android:background="#121729">
         <LinearLayout android:layout_width="match_parent" android:layout_height="50dp" android:gravity="center_vertical">
-            <EditText android:id="@+id/liveTextInput" android:layout_width="0dp" android:layout_height="44dp" android:layout_weight="1" android:hint="@string/enter_text" android:textColor="#FFFFFF" android:textColorHint="#7F89A8" android:singleLine="false" android:background="@drawable/bg_editor" android:paddingHorizontal="12dp" />
-            <SeekBar android:id="@+id/textSizeSeek" android:layout_width="105dp" android:layout_height="44dp" android:max="72" android:progress="28" />
-            <ImageButton android:id="@+id/textDeleteButton" android:layout_width="44dp" android:layout_height="44dp" android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_delete" android:tint="#FFFFFF" />
+            <EditText android:id="@+id/liveTextInput" android:layout_width="0dp" android:layout_height="44dp"
+                android:layout_weight="1" android:hint="@string/enter_text" android:textColor="#FFFFFF"
+                android:textColorHint="#788198" android:singleLine="false" android:background="@drawable/bg_editor"
+                android:paddingHorizontal="12dp"/>
+            <SeekBar android:id="@+id/textSizeSeek" android:layout_width="110dp" android:layout_height="44dp"
+                android:max="72" android:progress="28"/>
+            <ImageButton android:id="@+id/textDeleteButton" android:layout_width="44dp" android:layout_height="44dp"
+                android:background="@android:color/transparent" android:src="@android:drawable/ic_menu_delete" android:tint="#FFFFFF"/>
         </LinearLayout>
         <HorizontalScrollView android:layout_width="match_parent" android:layout_height="52dp" android:scrollbars="none">
-            <LinearLayout android:id="@+id/fontRow" android:layout_width="wrap_content" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="horizontal" />
+            <LinearLayout android:id="@+id/fontRow" android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:gravity="center_vertical" android:orientation="horizontal"/>
         </HorizontalScrollView>
     </LinearLayout>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="54dp" android:gravity="center" android:orientation="horizontal">
-        <ImageButton android:id="@+id/undoButton" android:layout_width="48dp" android:layout_height="48dp" android:background="@android:color/transparent" android:contentDescription="@string/undo" android:src="@android:drawable/ic_menu_revert" android:tint="#FFFFFF" />
-        <ImageButton android:id="@+id/playButton" android:layout_width="54dp" android:layout_height="54dp" android:background="@android:color/transparent" android:contentDescription="@string/play" android:src="@android:drawable/ic_media_play" android:tint="#FFFFFF" />
-        <ImageButton android:id="@+id/redoButton" android:layout_width="48dp" android:layout_height="48dp" android:background="@android:color/transparent" android:contentDescription="@string/redo" android:src="@android:drawable/ic_menu_rotate" android:tint="#FFFFFF" />
-    </LinearLayout>
-
-    <com.virexalo.editor.editor.TimelineView android:id="@+id/timelineView" android:layout_width="match_parent" android:layout_height="92dp" android:layout_marginHorizontal="10dp" android:layout_marginBottom="4dp" android:background="@drawable/bg_editor" />
-
-    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="70dp" android:fillViewport="false" android:scrollbars="none">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp">
-            <com.google.android.material.button.MaterialButton android:id="@+id/trimTool" android:layout_width="86dp" android:layout_height="50dp" android:text="@string/trim" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/splitTool" android:layout_width="86dp" android:layout_height="50dp" android:text="@string/split" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/textTool" android:layout_width="86dp" android:layout_height="50dp" android:text="@string/text" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/audioTool" android:layout_width="86dp" android:layout_height="50dp" android:text="@string/audio" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/filterTool" android:layout_width="86dp" android:layout_height="50dp" android:text="@string/filters" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/effectTool" android:layout_width="86dp" android:layout_height="50dp" android:text="@string/effects" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/cropTool" android:layout_width="86dp" android:layout_height="50dp" android:text="Crop" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/speedTool" android:layout_width="86dp" android:layout_height="50dp" android:text="Speed" />
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="68dp"
+        android:scrollbars="none" android:fillViewport="false">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+            android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp">
+            <com.google.android.material.button.MaterialButton android:id="@+id/trimTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/trim" app:cornerRadius="18dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/splitTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/split" app:cornerRadius="18dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/textTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/text" app:cornerRadius="18dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/audioTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/audio" app:cornerRadius="18dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/filterTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/filters" app:cornerRadius="18dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/effectTool" android:layout_width="82dp" android:layout_height="50dp" android:text="@string/effects" app:cornerRadius="18dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/cropTool" android:layout_width="82dp" android:layout_height="50dp" android:text="Crop" app:cornerRadius="18dp"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/speedTool" android:layout_width="82dp" android:layout_height="50dp" android:text="Speed" app:cornerRadius="18dp"/>
         </LinearLayout>
     </HorizontalScrollView>
 </LinearLayout>
