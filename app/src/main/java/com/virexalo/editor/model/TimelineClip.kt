@@ -8,6 +8,4 @@ data class TimelineClip(
     val sourceEndMs: Long? = null,
     val startOnTimelineMs: Long = 0L,
     val durationMs: Long
-) {
-    val endOnTimelineMs: Long get() = startOnTimelineMs + durationMs
-}
+) { val endOnTimelineMs: Long get() = startOnTimelineMs + durationMs }
