@@ -201,15 +201,15 @@ class EditorActivity : AppCompatActivity() {
                 EditorTool.EFFECTS -> showEffectCatalog()
                 EditorTool.CROP -> showCropCatalog()
                 EditorTool.CANVAS -> showCanvasCatalog()
-                EditorTool.SPEED -> openToolPanel("Speed")
-                EditorTool.ADJUST -> openToolPanel("Adjust")
-                EditorTool.TRANSITIONS -> openToolPanel("Transitions")
-                EditorTool.MASK -> openToolPanel("Mask")
-                EditorTool.CHROMA_KEY -> openToolPanel("Chroma Key")
-                EditorTool.KEYFRAMES -> openToolPanel("Keyframes")
-                EditorTool.DRAW -> openToolPanel("Draw")
-                EditorTool.VOICE_OVER -> Toast.makeText(this, "Voice over", Toast.LENGTH_SHORT).show()
-                EditorTool.SUBTITLES -> Toast.makeText(this, "Subtitles", Toast.LENGTH_SHORT).show()
+                EditorTool.SPEED -> showSpeedCatalog()
+                EditorTool.ADJUST -> showAdjustCatalog()
+                EditorTool.TRANSITIONS -> showTransitionCatalog()
+                EditorTool.MASK -> showMaskCatalog()
+                EditorTool.CHROMA_KEY -> showChromaCatalog()
+                EditorTool.KEYFRAMES -> showKeyframeCatalog()
+                EditorTool.DRAW -> showDrawCatalog()
+                EditorTool.VOICE_OVER -> showVoiceCatalog()
+                EditorTool.SUBTITLES -> showSubtitleCatalog()
                 else -> Unit
             }
         }
@@ -408,6 +408,91 @@ class EditorActivity : AppCompatActivity() {
                 return true
             }
         })
+    }
+
+    private fun showPreviewCatalog(title: String, labels: Array<String>, selected: (Int) -> Unit) {
+        val frame = frameAt(mediaUri ?: return) ?: return
+        val scroll = android.widget.HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
+        val row = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.HORIZONTAL
+            setPadding(dp(8), dp(8), dp(8), dp(8))
+        }
+        labels.forEachIndexed { index, label ->
+            val card = android.widget.LinearLayout(this).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+                setPadding(dp(5), dp(5), dp(5), dp(5))
+                background = getDrawable(R.drawable.bg_editor)
+            }
+            val image = android.widget.ImageView(this).apply {
+                layoutParams = android.widget.LinearLayout.LayoutParams(dp(96), dp(64))
+                scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
+                setImageBitmap(frame)
+            }
+            when (index % 5) {
+                1 -> image.colorFilter = android.graphics.ColorMatrixColorFilter(android.graphics.ColorMatrix().apply { setSaturation(0f) })
+                2 -> image.alpha = .72f
+                3 -> image.rotation = 2f
+                4 -> image.colorFilter = android.graphics.ColorMatrixColorFilter(android.graphics.ColorMatrix().apply { setSaturation(1.5f) })
+            }
+            val text = android.widget.TextView(this).apply {
+                this.text = label
+                setTextColor(Color.WHITE)
+                textSize = 11f
+                gravity = Gravity.CENTER
+                setPadding(0, dp(5), 0, 0)
+            }
+            card.addView(image); card.addView(text)
+            card.setOnClickListener { selected(index); viewModel.clearTool() }
+            row.addView(card, android.widget.LinearLayout.LayoutParams(dp(112), dp(100)).apply { marginEnd = dp(8) })
+        }
+        scroll.addView(row)
+        AlertDialog.Builder(this).setTitle(title).setView(scroll).setNegativeButton(R.string.close, null).show()
+    }
+
+    private fun showSpeedCatalog() = showPreviewCatalog("Speed", arrayOf("0.25x","0.5x","1x","1.5x","2x")) { i ->
+        speed = arrayOf(.25f,.5f,1f,1.5f,2f)[i]
+        player?.setPlaybackSpeed(speed)
+    }
+
+    private fun showAdjustCatalog() = showPreviewCatalog("Adjust", arrayOf("Brightness","Contrast","Saturation","Warmth","Fade")) { i ->
+        when (i) {
+            0 -> brightness = .08f
+            1 -> contrast = .15f
+            2 -> saturation = 25f
+            else -> Unit
+        }
+        applyVideoEffects()
+    }
+
+    private fun showTransitionCatalog() = showPreviewCatalog("Transitions", arrayOf("None","Fade","Dissolve","Slide","Zoom","Wipe")) { _ ->
+        Toast.makeText(this, "Transition selected", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showMaskCatalog() = showPreviewCatalog("Mask", arrayOf("Circle","Square","Rounded","Split","Feather")) { _ ->
+        Toast.makeText(this, "Mask selected", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showChromaCatalog() = showPreviewCatalog("Chroma Key", arrayOf("Green","Blue","Red","Custom")) { _ ->
+        Toast.makeText(this, "Chroma key selected", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showKeyframeCatalog() = showPreviewCatalog("Keyframes", arrayOf("Position","Scale","Rotation","Opacity")) { _ ->
+        Toast.makeText(this, "Keyframe control selected", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showDrawCatalog() = showPreviewCatalog("Draw", arrayOf("Pen","Marker","Arrow","Line","Highlight")) { _ ->
+        Toast.makeText(this, "Drawing tool selected", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showVoiceCatalog() = showPreviewCatalog("Voice Over", arrayOf("Record","Import","Noise reduction","Fade in","Fade out")) { i ->
+        if (i == 0) Toast.makeText(this, "Recording ready", Toast.LENGTH_SHORT).show()
+        else if (i == 1) openAudioPicker()
+    }
+
+    private fun showSubtitleCatalog() = showPreviewCatalog("Subtitles", arrayOf("SRT","Auto","Style","Position","Timing")) { i ->
+        if (i == 0) openSubtitlePicker()
+        else Toast.makeText(this, "Subtitle option selected", Toast.LENGTH_SHORT).show()
     }
 
     private fun showFilterCatalog() {
