@@ -47,4 +47,8 @@
     <string name="settings_title">Settings</string>
     <string name="language_setting">Language</string>
     <string name="save">Save</string>
+    <string name="crash_report_title">Previous crash report</string>
+    <string name="copy_crash_report">Copy</string>
+    <string name="share_crash_report">Share</string>
+    <string name="dismiss_crash_report">Dismiss</string>
 </resources>
