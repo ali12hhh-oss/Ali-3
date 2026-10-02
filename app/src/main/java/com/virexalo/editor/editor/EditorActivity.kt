@@ -6,6 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
+import android.graphics.Color
+import android.graphics.Typeface
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.activity.result.contract.ActivityResultContracts
 import com.virexalo.editor.audio.AudioClip
 import android.media.MediaMetadataRetriever
@@ -46,6 +52,11 @@ class EditorActivity : AppCompatActivity() {
     private lateinit var emptyPreview: android.widget.TextView
     private lateinit var imagePreview: android.widget.ImageView
     private lateinit var overlayContainer: android.widget.FrameLayout
+    private lateinit var textEditorBar: android.view.View
+    private lateinit var liveTextInput: android.widget.EditText
+    private lateinit var textSizeSeek: android.widget.SeekBar
+    private lateinit var fontRow: android.widget.LinearLayout
+    private var activeText: android.widget.EditText? = null
     private var mediaUri: Uri? = null
     private var durationMs = 1L
     private var trimStartMs = 0L
@@ -64,6 +75,11 @@ class EditorActivity : AppCompatActivity() {
         emptyPreview = findViewById(R.id.emptyPreview)
         imagePreview = findViewById(R.id.imagePreview)
         overlayContainer = findViewById(R.id.overlayContainer)
+        textEditorBar = findViewById(R.id.textEditorBar)
+        liveTextInput = findViewById(R.id.liveTextInput)
+        textSizeSeek = findViewById(R.id.textSizeSeek)
+        fontRow = findViewById(R.id.fontRow)
+        setupLiveTextControls()
         mediaUri = intent.getStringExtra(EXTRA_URI)?.let(Uri::parse)
 
         findViewById<android.view.View>(R.id.backButton).setOnClickListener { finish() }
@@ -188,28 +204,66 @@ class EditorActivity : AppCompatActivity() {
     }
 
     private fun showTextTool() {
-        val input = android.widget.EditText(this).apply {
-            hint = getString(R.string.enter_text)
-            setSingleLine(false)
+        textEditorBar.visibility = View.VISIBLE
+        if (activeText == null) addTextOverlay("")
+        activeText?.let {
+            it.beginBatchEdit()
+            liveTextInput.setText(it.text)
+            liveTextInput.setSelection(liveTextInput.length())
+            it.endBatchEdit()
+            liveTextInput.requestFocus()
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
+                .showSoftInput(liveTextInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
         }
-        AlertDialog.Builder(this)
-            .setTitle(R.string.text)
-            .setView(input)
-            .setNegativeButton(R.string.close, null)
-            .setPositiveButton(R.string.add_text) { _, _ ->
-                val value = input.text.toString().trim()
-                if (value.isNotEmpty()) addTextOverlay(value)
-            }.show()
+    }
+
+    private fun setupLiveTextControls() {
+        liveTextInput.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                activeText?.setText(s ?: "")
+                activeText?.setSelection(activeText?.length() ?: 0)
+            }
+            override fun afterTextChanged(s: android.text.Editable?) = Unit
+        })
+        textSizeSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                activeText?.setTextSize((16 + progress).toFloat())
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+        })
+        findViewById<View>(R.id.textDeleteButton).setOnClickListener {
+            activeText?.let { overlayContainer.removeView(it) }
+            activeText = null
+            liveTextInput.setText("")
+            textEditorBar.visibility = View.GONE
+            viewModel.clearTool()
+        }
+        listOf(
+            "Sans" to "sans-serif",
+            "Serif" to "serif",
+            "Mono" to "monospace",
+            "Medium" to "sans-serif-medium",
+            "Condensed" to "sans-serif-condensed"
+        ).forEach { (label, family) ->
+            val b = com.google.android.material.button.MaterialButton(this).apply {
+                text = label
+                minWidth = 100
+                setOnClickListener { activeText?.typeface = Typeface.create(family, Typeface.NORMAL) }
+            }
+            fontRow.addView(b, android.widget.LinearLayout.LayoutParams(100, 46).apply { marginEnd = 6 })
+        }
     }
 
     private fun addTextOverlay(value: String) {
-        val textView = android.widget.TextView(this).apply {
-            text = value
-            setTextColor(android.graphics.Color.WHITE)
-            textSize = 28f
-            setShadowLayer(8f, 0f, 2f, android.graphics.Color.BLACK)
+        val textView = DirectTransformText(this).apply {
+            setText(value)
+            setTextColor(Color.WHITE)
+            setTextSize(28f)
+            setShadowLayer(8f, 0f, 2f, Color.BLACK)
             setPadding(16, 8, 16, 8)
-            isClickable = true
+            beginTransformMode(true)
         }
         val params = android.widget.FrameLayout.LayoutParams(
             android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -217,6 +271,9 @@ class EditorActivity : AppCompatActivity() {
             android.view.Gravity.CENTER
         )
         overlayContainer.addView(textView, params)
+        activeText = textView
+        textEditorBar.visibility = View.VISIBLE
+        liveTextInput.setText(value)
         textView.setOnTouchListener(object : android.view.View.OnTouchListener {
             var downX = 0f
             var downY = 0f
@@ -239,6 +296,7 @@ class EditorActivity : AppCompatActivity() {
                 return true
             }
         })
+        textView.requestFocus()
         Toast.makeText(this, R.string.text_added, Toast.LENGTH_SHORT).show()
     }
 
