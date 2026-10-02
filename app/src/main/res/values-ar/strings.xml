@@ -24,4 +24,8 @@
     <string name="enter_text">أدخل النص</string>
     <string name="add_text">إضافة النص</string>
     <string name="text_added">تمت إضافة طبقة النص</string>
+    <string name="audio_trim_before_import">قص الصوت قبل الاستيراد</string>
+    <string name="audio_duration_seconds">المدة: %1$d ثانية</string>
+    <string name="import_audio">استيراد الصوت</string>
+    <string name="audio_imported">تم استيراد الصوت</string>
 </resources>
