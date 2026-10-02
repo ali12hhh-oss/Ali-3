@@ -8,9 +8,12 @@ import android.os.Environment
 import android.widget.Toast
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.Gravity
 import android.widget.SeekBar
 import androidx.activity.result.contract.ActivityResultContracts
 import com.virexalo.editor.audio.AudioClip
@@ -96,6 +99,23 @@ class EditorActivity : AppCompatActivity() {
         findViewById<android.view.View>(R.id.fullscreenButton).setOnClickListener { showFullscreen() }
         findViewById<android.view.View>(R.id.fullscreenCloseButton).setOnClickListener { hideFullscreen() }
         findViewById<android.view.View>(R.id.fullscreenPlayButton).setOnClickListener { toggleFullscreenPlayback() }
+        findViewById<android.view.View>(R.id.toolCloseButton).setOnClickListener { closeToolPanel() }
+        findViewById<android.widget.SeekBar>(R.id.toolSeek).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(s: SeekBar, p: Int, fromUser: Boolean) { applyToolValue(p) }
+            override fun onStartTrackingTouch(s: SeekBar) = Unit
+            override fun onStopTrackingTouch(s: SeekBar) = Unit
+        })
+        findViewById<android.view.View>(R.id.overlayTool).setOnClickListener { pickOverlay() }
+        bindTool(R.id.drawTool, EditorTool.DRAW)
+        bindTool(R.id.voiceTool, EditorTool.VOICE_OVER)
+        bindTool(R.id.subtitlesTool, EditorTool.SUBTITLES)
+        bindTool(R.id.cropTool, EditorTool.CROP)
+        bindTool(R.id.canvasTool, EditorTool.CANVAS)
+        bindTool(R.id.speedTool, EditorTool.SPEED)
+        bindTool(R.id.transitionTool, EditorTool.TRANSITIONS)
+        bindTool(R.id.maskTool, EditorTool.MASK)
+        bindTool(R.id.chromaTool, EditorTool.CHROMA_KEY)
+        bindTool(R.id.keyframeTool, EditorTool.KEYFRAMES)
 
         bindTool(R.id.trimTool, EditorTool.TRIM)
         bindTool(R.id.splitTool, EditorTool.SPLIT)
@@ -129,8 +149,18 @@ class EditorActivity : AppCompatActivity() {
                 EditorTool.SPLIT -> splitAtPlayhead()
                 EditorTool.TEXT -> showTextTool()
                 EditorTool.AUDIO -> openAudioPicker()
-                EditorTool.FILTERS -> showCatalog(R.string.filters)
-                EditorTool.EFFECTS -> showCatalog(R.string.effects)
+                EditorTool.FILTERS -> openToolPanel("Filters")
+                EditorTool.EFFECTS -> openToolPanel("Effects")
+                EditorTool.CROP -> openToolPanel("Crop")
+                EditorTool.CANVAS -> openToolPanel("Canvas Background")
+                EditorTool.SPEED -> openToolPanel("Speed")
+                EditorTool.TRANSITIONS -> openToolPanel("Transitions")
+                EditorTool.MASK -> openToolPanel("Mask")
+                EditorTool.CHROMA_KEY -> openToolPanel("Chroma Key")
+                EditorTool.KEYFRAMES -> openToolPanel("Keyframes")
+                EditorTool.DRAW -> openToolPanel("Draw")
+                EditorTool.VOICE_OVER -> Toast.makeText(this, "Voice over", Toast.LENGTH_SHORT).show()
+                EditorTool.SUBTITLES -> Toast.makeText(this, "Subtitles", Toast.LENGTH_SHORT).show()
                 else -> Unit
             }
         }
@@ -148,6 +178,8 @@ class EditorActivity : AppCompatActivity() {
             trimStartMs = 0L
             trimEndMs = durationMs
             timeline.setTimeline(durationMs, 0L)
+            totalTimeText().text = formatTime(durationMs)
+            timeline.setMediaThumbnail(frameAt(uri))
             currentProject = createInitialProject(uri)
             currentProject?.let(viewModel::start)
             return
@@ -167,6 +199,8 @@ class EditorActivity : AppCompatActivity() {
                     trimStartMs = 0L
                     trimEndMs = durationMs
                     timeline.setTimeline(durationMs, exo.currentPosition)
+                    totalTimeText().text = formatTime(durationMs)
+                    timeline.setMediaThumbnail(frameAt(uri))
                     currentProject = createInitialProject(uri)
                     currentProject?.let(viewModel::start)
                 }
@@ -180,6 +214,8 @@ class EditorActivity : AppCompatActivity() {
                 delay(100)
                 timeline.setPosition(exo.currentPosition)
                 viewModel.setPlayhead(exo.currentPosition)
+                findViewById<android.widget.TextView>(R.id.currentTimeText).text = formatTime(exo.currentPosition)
+                findViewById<android.view.View>(R.id.playButton).contentDescription = if (exo.isPlaying) getString(R.string.pause) else getString(R.string.play)
             }
         }
     }
@@ -279,13 +315,12 @@ class EditorActivity : AppCompatActivity() {
     }
 
     private fun addTextOverlay(value: String) {
-        val textView = DirectTransformText(this).apply {
+        val textView = DraggableTextView(this).apply {
             setText(value)
             setTextColor(Color.WHITE)
             setTextSize(28f)
             setShadowLayer(8f, 0f, 2f, Color.BLACK)
             setPadding(16, 8, 16, 8)
-            beginTransformMode(true)
         }
         val params = android.widget.FrameLayout.LayoutParams(
             android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -299,6 +334,64 @@ class EditorActivity : AppCompatActivity() {
         textView.requestFocus()
         Toast.makeText(this, R.string.text_added, Toast.LENGTH_SHORT).show()
     }
+
+    private fun pickOverlay() {
+        registerOverlayPicker.launch(arrayOf("image/*", "video/*", "image/gif"))
+    }
+
+    private val registerOverlayPicker = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        uri ?: return@registerForActivityResult
+        val iv = android.widget.ImageView(this).apply {
+            setImageURI(uri)
+            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+            setBackgroundColor(Color.TRANSPARENT)
+            isClickable = true
+        }
+        val p = android.widget.FrameLayout.LayoutParams(dp(150), dp(150), Gravity.CENTER)
+        overlayContainer.addView(iv, p)
+        iv.setOnTouchListener(object : View.OnTouchListener {
+            var dx = 0f; var dy = 0f
+            override fun onTouch(v: View, e: MotionEvent): Boolean {
+                when (e.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> { dx = v.x - e.rawX; dy = v.y - e.rawY; return true }
+                    MotionEvent.ACTION_MOVE -> { v.x = e.rawX + dx; v.y = e.rawY + dy; return true }
+                }
+                return true
+            }
+        })
+    }
+
+    private fun openToolPanel(title: String) {
+        findViewById<View>(R.id.toolPanel).visibility = View.VISIBLE
+        findViewById<android.widget.TextView>(R.id.toolTitle).text = title
+        findViewById<SeekBar>(R.id.toolSeek).progress = 50
+    }
+
+    private fun closeToolPanel() {
+        findViewById<View>(R.id.toolPanel).visibility = View.GONE
+        viewModel.clearTool()
+    }
+
+    private fun applyToolValue(progress: Int) {
+        val tool = viewModel.state.value?.tool ?: EditorTool.NONE
+        if (tool == EditorTool.SPEED) {
+            player?.setPlaybackSpeed((0.25f + progress / 100f * 1.75f).coerceIn(0.25f, 2f))
+        }
+    }
+
+    private fun frameAt(uri: Uri): Bitmap? = runCatching {
+        val r = MediaMetadataRetriever()
+        r.setDataSource(this, uri)
+        val b = r.getFrameAtTime(0L, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+        r.release()
+        b
+    }.getOrNull()
+
+    private fun totalTimeText() = findViewById<android.widget.TextView>(R.id.totalTimeText)
+
+    private fun formatTime(ms: Long): String = "%d:%02d".format(ms / 60000, (ms / 1000) % 60)
+
+    private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
     private fun openAudioPicker() {
         audioPicker.launch(arrayOf("audio/*"))
@@ -397,6 +490,20 @@ class EditorActivity : AppCompatActivity() {
             }).build()
         player?.pause()
         transformer.start(item, output.absolutePath)
+    }
+
+    private class DraggableTextView(context: Context) : androidx.appcompat.widget.AppCompatTextView(context) {
+        private var dx = 0f; private var dy = 0f
+        init {
+            isClickable = true
+            setOnTouchListener { v, e ->
+                when (e.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> { dx = v.x - e.rawX; dy = v.y - e.rawY; true }
+                    MotionEvent.ACTION_MOVE -> { v.x = e.rawX + dx; v.y = e.rawY + dy; true }
+                    else -> true
+                }
+            }
+        }
     }
 
     override fun onStop() {
