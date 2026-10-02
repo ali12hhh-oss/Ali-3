@@ -105,62 +105,62 @@
         </LinearLayout>
 
         <HorizontalScrollView android:id="@+id/editingControlsScroll"
-            android:layout_width="match_parent" android:layout_height="78dp" android:scrollbars="none"
-            android:background="#0F1322">
+            android:layout_width="match_parent" android:layout_height="70dp" android:scrollbars="none"
+            android:background="#0D1220">
             <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                android:gravity="center_vertical" android:paddingHorizontal="8dp">
+                android:gravity="center_vertical" android:paddingHorizontal="6dp" android:orientation="horizontal">
 
-                <com.google.android.material.button.MaterialButton android:id="@+id/trimTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/trim"
-                    app:icon="@android:drawable/ic_menu_crop" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/splitTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/split"
-                    app:icon="@android:drawable/ic_menu_more" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/textTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/text"
-                    app:icon="@android:drawable/ic_menu_edit" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/overlayTool"
-                    android:layout_width="84dp" android:layout_height="60dp" android:text="Overlay"
-                    app:icon="@android:drawable/ic_menu_gallery" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/drawTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="Draw"
-                    app:icon="@android:drawable/ic_menu_edit" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/audioTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="@string/audio"
-                    app:icon="@android:drawable/ic_btn_speak_now" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/voiceTool"
-                    android:layout_width="84dp" android:layout_height="60dp" android:text="Voice"
-                    app:icon="@android:drawable/ic_btn_speak_now" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/subtitlesTool"
-                    android:layout_width="88dp" android:layout_height="60dp" android:text="Subtitles"
-                    app:icon="@android:drawable/ic_menu_info_details" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/cropTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="Crop"
-                    app:icon="@android:drawable/ic_menu_crop" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/canvasTool"
-                    android:layout_width="86dp" android:layout_height="60dp" android:text="Canvas"
-                    app:icon="@android:drawable/ic_menu_view" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/speedTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="Speed"
-                    app:icon="@android:drawable/ic_media_ff" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/filterTool"
-                    android:layout_width="84dp" android:layout_height="60dp" android:text="@string/filters"
-                    app:icon="@android:drawable/ic_menu_slideshow" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/effectTool"
-                    android:layout_width="84dp" android:layout_height="60dp" android:text="@string/effects"
-                    app:icon="@android:drawable/ic_menu_rotate" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/transitionTool"
-                    android:layout_width="94dp" android:layout_height="60dp" android:text="Transition"
-                    app:icon="@android:drawable/ic_menu_sort_by_size" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/maskTool"
-                    android:layout_width="76dp" android:layout_height="60dp" android:text="Mask"
-                    app:icon="@android:drawable/ic_menu_gallery" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/chromaTool"
-                    android:layout_width="90dp" android:layout_height="60dp" android:text="Chroma"
-                    app:icon="@android:drawable/ic_menu_camera" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
-                <com.google.android.material.button.MaterialButton android:id="@+id/keyframeTool"
-                    android:layout_width="90dp" android:layout_height="60dp" android:text="Keyframe"
-                    app:icon="@android:drawable/ic_menu_compass" app:iconTint="#AEB6D3" app:iconGravity="textTop" app:cornerRadius="14dp"/>
+                <ImageButton android:id="@+id/trimTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_trim" android:contentDescription="@string/trim"/>
+                <ImageButton android:id="@+id/splitTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_split" android:contentDescription="@string/split"/>
+                <ImageButton android:id="@+id/textTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_text" android:contentDescription="@string/text"/>
+                <ImageButton android:id="@+id/overlayTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_overlay" android:contentDescription="Overlay"/>
+                <ImageButton android:id="@+id/drawTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_draw" android:contentDescription="Draw"/>
+                <ImageButton android:id="@+id/audioTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_audio" android:contentDescription="@string/audio"/>
+                <ImageButton android:id="@+id/voiceTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_audio" android:contentDescription="Voice"/>
+                <ImageButton android:id="@+id/subtitlesTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_subtitles" android:contentDescription="Subtitles"/>
+                <ImageButton android:id="@+id/cropTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_crop" android:contentDescription="Crop"/>
+                <ImageButton android:id="@+id/canvasTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_canvas" android:contentDescription="Canvas"/>
+                <ImageButton android:id="@+id/speedTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_speed" android:contentDescription="Speed"/>
+                <ImageButton android:id="@+id/filterTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_filter" android:contentDescription="@string/filters"/>
+                <ImageButton android:id="@+id/effectTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_effects" android:contentDescription="@string/effects"/>
+                <ImageButton android:id="@+id/transitionTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_transition" android:contentDescription="Transition"/>
+                <ImageButton android:id="@+id/maskTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_mask" android:contentDescription="Mask"/>
+                <ImageButton android:id="@+id/chromaTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_chroma" android:contentDescription="Chroma Key"/>
+                <ImageButton android:id="@+id/keyframeTool" android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless" android:padding="13dp"
+                    android:src="@drawable/ic_tool_keyframe" android:contentDescription="Keyframes"/>
             </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
