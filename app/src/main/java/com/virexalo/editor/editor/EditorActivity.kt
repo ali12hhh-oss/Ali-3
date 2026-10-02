@@ -380,11 +380,16 @@ class EditorActivity : AppCompatActivity() {
     }
 
     private fun frameAt(uri: Uri): Bitmap? = runCatching {
-        val r = MediaMetadataRetriever()
-        r.setDataSource(this, uri)
-        val b = r.getFrameAtTime(0L, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-        r.release()
-        b
+        val mime = contentResolver.getType(uri).orEmpty()
+        if (mime.startsWith("image/")) {
+            contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it) }
+        } else {
+            val r = MediaMetadataRetriever()
+            r.setDataSource(this, uri)
+            val b = r.getFrameAtTime(0L, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+            r.release()
+            b
+        }
     }.getOrNull()
 
     private fun totalTimeText() = findViewById<android.widget.TextView>(R.id.totalTimeText)
