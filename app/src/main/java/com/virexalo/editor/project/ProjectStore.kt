@@ -1,17 +1,5 @@
 package com.virexalo.editor.project
-
 import android.content.Context
 import com.google.gson.Gson
-import java.io.File
-
-class ProjectStore(context: Context) {
-    private val file = File(context.filesDir, "virexalo_projects.json")
-    private val gson = Gson()
-
-    fun save(snapshot: ProjectSnapshot) {
-        file.writeText(gson.toJson(snapshot))
-    }
-
-    fun load(): ProjectSnapshot? =
-        if (file.exists()) runCatching { gson.fromJson(file.readText(), ProjectSnapshot::class.java) }.getOrNull() else null
-}
+import com.virexalo.editor.model.EditorProject
+class ProjectStore(context:Context){private val p=context.getSharedPreferences("virexalo_projects",0);private val g=Gson();fun save(s:ProjectSnapshot)=p.edit().putString("current",g.toJson(s.project)).apply();fun load():ProjectSnapshot?=p.getString("current",null)?.let{runCatching{g.fromJson(it,EditorProject::class.java)}.getOrNull()?.let(::ProjectSnapshot)};fun clear()=p.edit().remove("current").apply()}
