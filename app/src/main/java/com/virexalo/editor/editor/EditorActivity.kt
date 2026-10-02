@@ -48,6 +48,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.io.File
+import com.google.common.collect.ImmutableList
 
 @androidx.media3.common.util.UnstableApi
 class EditorActivity : AppCompatActivity() {
@@ -496,7 +497,7 @@ class EditorActivity : AppCompatActivity() {
                     .setScale(0.75f, 0.75f)
                     .build()
             )
-            list += OverlayEffect(listOf(overlay))
+            list += OverlayEffect(ImmutableList.of(overlay))
         }
         return list
     }
