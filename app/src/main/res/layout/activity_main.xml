@@ -1,13 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:gravity="center"
-    android:padding="28dp" android:background="#090B14">
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="@string/app_name" android:textSize="34sp" android:textStyle="bold" android:textColor="#FFFFFF" />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" android:text="@string/no_media" android:textSize="16sp" android:textColor="#AEB6D3" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/newProjectButton" android:layout_width="match_parent" android:layout_height="56dp"
-        android:layout_marginTop="28dp" android:text="@string/new_project" android:textSize="16sp" />
-</LinearLayout>
+    android:background="#0B0D16" android:padding="20dp">
+
+    <LinearLayout
+        android:id="@+id/homeHeader"
+        android:layout_width="match_parent" android:layout_height="64dp"
+        android:gravity="center_vertical" android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/app_name" android:textColor="#F4F5FA"
+            android:textSize="23sp" android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Video Editor" android:textColor="#8F96AA"
+            android:textSize="12sp" android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_below="@id/homeHeader" android:paddingTop="12dp"
+        android:paddingBottom="24dp" android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/newProjectButton"
+                android:layout_width="match_parent" android:layout_height="220dp"
+                android:orientation="vertical" android:gravity="bottom"
+                android:padding="24dp" android:clickable="true" android:focusable="true"
+                android:background="@drawable/bg_editor">
+
+                <FrameLayout
+                    android:layout_width="56dp" android:layout_height="56dp"
+                    android:background="#202A46">
+                    <TextView
+                        android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:gravity="center" android:text="+" android:textSize="30sp"
+                        android:textColor="#AABEFF"/>
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp" android:text="@string/new_project"
+                    android:textColor="#F4F5FA" android:textSize="24sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp" android:text="@string/no_media"
+                    android:textColor="#9299AD" android:textSize="13sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="112dp"
+                android:layout_marginTop="16dp" android:padding="20dp"
+                android:orientation="vertical" android:gravity="center_vertical"
+                android:background="@drawable/bg_editor">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Projects" android:textColor="#F4F5FA"
+                    android:textSize="18sp" android:textStyle="bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp" android:text="Your saved edits will appear here"
+                    android:textColor="#858CA0" android:textSize="13sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" android:layout_marginTop="36dp"
+                android:text="Simple • Fast • Private" android:textColor="#687086"
+                android:textSize="13sp"/>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
