@@ -2,11 +2,11 @@ plugins { id("com.android.application"); id("org.jetbrains.kotlin.android") }
 
 android {
     namespace = "com.virexalo.editor"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.virexalo.editor"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "0.3.0"
     }
