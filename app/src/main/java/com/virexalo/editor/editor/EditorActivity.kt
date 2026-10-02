@@ -87,6 +87,15 @@ class EditorActivity : AppCompatActivity() {
         findViewById<android.view.View>(R.id.undoButton).setOnClickListener { viewModel.undo() }
         findViewById<android.view.View>(R.id.redoButton).setOnClickListener { viewModel.redo() }
         findViewById<android.view.View>(R.id.exportButton).setOnClickListener { exportTrimmed() }
+        findViewById<android.view.View>(R.id.textCloseButton).setOnClickListener {
+            textEditorBar.visibility = View.GONE
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
+                .hideSoftInputFromWindow(liveTextInput.windowToken, 0)
+            viewModel.clearTool()
+        }
+        findViewById<android.view.View>(R.id.fullscreenButton).setOnClickListener { showFullscreen() }
+        findViewById<android.view.View>(R.id.fullscreenCloseButton).setOnClickListener { hideFullscreen() }
+        findViewById<android.view.View>(R.id.fullscreenPlayButton).setOnClickListener { toggleFullscreenPlayback() }
 
         bindTool(R.id.trimTool, EditorTool.TRIM)
         bindTool(R.id.splitTool, EditorTool.SPLIT)
@@ -346,6 +355,23 @@ class EditorActivity : AppCompatActivity() {
             )
             .setNegativeButton(R.string.close, null)
             .show()
+    }
+
+    private fun showFullscreen() {
+        val overlay = findViewById<View>(R.id.fullscreenOverlay)
+        val fullPlayer = findViewById<PlayerView>(R.id.fullscreenPlayer)
+        fullPlayer.player = player
+        overlay.visibility = View.VISIBLE
+    }
+
+    private fun hideFullscreen() {
+        findViewById<View>(R.id.fullscreenOverlay).visibility = View.GONE
+        findViewById<PlayerView>(R.id.fullscreenPlayer).player = null
+        playerView.player = player
+    }
+
+    private fun toggleFullscreenPlayback() {
+        player?.let { if (it.isPlaying) it.pause() else it.play() }
     }
 
     private fun exportTrimmed() {
