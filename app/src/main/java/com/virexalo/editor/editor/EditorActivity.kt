@@ -16,11 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.transformer.ClippingConfiguration
 import androidx.media3.transformer.Composition
 import androidx.media3.transformer.EditedMediaItem
 import androidx.media3.transformer.ExportException
-import androidx.media3.transformer.TransformationRequest
 import androidx.media3.transformer.Transformer
 import androidx.media3.ui.PlayerView
 import com.virexalo.editor.R
@@ -306,16 +304,14 @@ class EditorActivity : AppCompatActivity() {
         if (trimEndMs <= trimStartMs) return
         val outputDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES) ?: filesDir
         val output = File(outputDir, "Virexalo_${System.currentTimeMillis()}.mp4")
-        val clip = ClippingConfiguration.Builder()
+        val clip = MediaItem.ClippingConfiguration.Builder()
             .setStartPositionMs(trimStartMs)
             .setEndPositionMs(trimEndMs)
             .build()
         val media = MediaItem.Builder().setUri(uri).setClippingConfiguration(clip).build()
         val item = EditedMediaItem.Builder(media).build()
         val transformer = Transformer.Builder(this)
-            .setTransformationRequest(
-                TransformationRequest.Builder().setVideoMimeType("video/avc").build()
-            )
+            .setVideoMimeType("video/avc")
             .addListener(object : Transformer.Listener {
                 override fun onCompleted(composition: Composition, exportResult: androidx.media3.transformer.ExportResult) {
                     Toast.makeText(this@EditorActivity, R.string.export_done, Toast.LENGTH_LONG).show()
