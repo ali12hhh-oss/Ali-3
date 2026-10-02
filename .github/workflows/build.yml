@@ -22,3 +22,5 @@ jobs:
         with:
           name: Virexalo-debug
           path: app/build/outputs/apk/debug/*.apk
+
+# Build verification after latest editor fix
