@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="#090B14">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical" android:paddingHorizontal="12dp">
+        <ImageButton android:id="@+id/backButton" android:layout_width="44dp" android:layout_height="44dp" android:background="@android:color/transparent" android:contentDescription="@string/close" android:src="@android:drawable/ic_menu_close_clear_cancel" android:tint="#FFFFFF" />
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/editor" android:textColor="#FFFFFF" android:textSize="19sp" android:textStyle="bold" android:gravity="center" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/exportButton" android:layout_width="wrap_content" android:layout_height="44dp" android:text="@string/export" />
+    </LinearLayout>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:padding="10dp">
+        <androidx.media3.ui.PlayerView android:id="@+id/playerView" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#000000" app:show_buffering="when_playing" app:use_controller="false" />
+        <TextView android:id="@+id/emptyPreview" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="@string/no_media" android:textColor="#8E97B8" android:textSize="15sp" />
+    </FrameLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="58dp" android:gravity="center" android:orientation="horizontal">
+        <ImageButton android:id="@+id/undoButton" android:layout_width="48dp" android:layout_height="48dp" android:background="@android:color/transparent" android:contentDescription="@string/undo" android:src="@android:drawable/ic_menu_revert" android:tint="#FFFFFF" />
+        <ImageButton android:id="@+id/playButton" android:layout_width="54dp" android:layout_height="54dp" android:background="@android:color/transparent" android:contentDescription="@string/play" android:src="@android:drawable/ic_media_play" android:tint="#FFFFFF" />
+        <ImageButton android:id="@+id/redoButton" android:layout_width="48dp" android:layout_height="48dp" android:background="@android:color/transparent" android:contentDescription="@string/redo" android:src="@android:drawable/ic_menu_rotate" android:tint="#FFFFFF" />
+    </LinearLayout>
+    <com.virexalo.editor.editor.TimelineView android:id="@+id/timelineView" android:layout_width="match_parent" android:layout_height="92dp" android:layout_marginHorizontal="10dp" android:layout_marginBottom="8dp" android:background="@drawable/bg_editor" />
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="76dp" android:fillViewport="false" android:scrollbars="none">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="8dp">
+            <com.google.android.material.button.MaterialButton android:id="@+id/trimTool" android:layout_width="90dp" android:layout_height="52dp" android:text="@string/trim" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/splitTool" android:layout_width="90dp" android:layout_height="52dp" android:text="@string/split" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/textTool" android:layout_width="90dp" android:layout_height="52dp" android:text="@string/text" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/audioTool" android:layout_width="90dp" android:layout_height="52dp" android:text="@string/audio" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/filterTool" android:layout_width="90dp" android:layout_height="52dp" android:text="@string/filters" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/effectTool" android:layout_width="90dp" android:layout_height="52dp" android:text="@string/effects" />
+        </LinearLayout>
+    </HorizontalScrollView>
+</LinearLayout>
