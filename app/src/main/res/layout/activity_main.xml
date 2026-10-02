@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#090B14" android:fillViewport="true" android:scrollbars="none">
+    android:background="#151B2E" android:fillViewport="true" android:scrollbars="none">
     <LinearLayout
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="vertical" android:padding="18dp">
@@ -18,9 +18,9 @@
                 android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:gravity="center" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="@string/app_name" android:textColor="#F4F5FA" android:textSize="23sp" android:textStyle="bold"/>
+                    android:text="@string/app_name" android:textColor="#F7F9FF" android:textSize="23sp" android:textStyle="bold"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="@string/video_editor" android:textColor="#8F96AA" android:textSize="12sp"/>
+                    android:text="@string/video_editor" android:textColor="#AEB9D6" android:textSize="12sp"/>
             </LinearLayout>
             <ImageButton
                 android:id="@+id/settingsButton" android:layout_width="48dp" android:layout_height="48dp"
@@ -39,7 +39,7 @@
             android:clickable="true" android:focusable="true" android:gravity="center_vertical"
             android:orientation="horizontal" android:padding="24dp">
             <ImageView android:layout_width="58dp" android:layout_height="58dp"
-                android:background="#202A46" android:padding="15dp" android:src="@drawable/ic_video_library"
+                android:background="#304A78" android:padding="15dp" android:src="@drawable/ic_video_library"
                 android:contentDescription="@null"/>
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:layout_marginStart="20dp" android:orientation="vertical">
@@ -47,7 +47,7 @@
                     android:text="@string/choose_media" android:textColor="#F4F5FA" android:textSize="23sp" android:textStyle="bold"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:layout_marginTop="6dp" android:text="@string/open_studio"
-                    android:textColor="#9299AD" android:textSize="13sp"/>
+                    android:textColor="#A8B5D3" android:textSize="13sp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -58,7 +58,7 @@
             android:layout_marginTop="10dp" android:background="@drawable/bg_editor"
             android:gravity="center_vertical" android:orientation="horizontal" android:padding="18dp">
             <ImageView android:layout_width="48dp" android:layout_height="48dp"
-                android:background="#171D30" android:padding="12dp" android:src="@drawable/ic_folder"/>
+                android:background="#253454" android:padding="12dp" android:src="@drawable/ic_folder"/>
             <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:layout_marginStart="16dp" android:text="@string/no_saved_projects"
                 android:textColor="#9299AD" android:textSize="14sp"/>
