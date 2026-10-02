@@ -20,4 +20,8 @@
     <string name="export_failed">Export failed</string>
     <string name="media_files">Media files</string>
     <string name="no_media">Select a video or image to start</string>
+    <string name="split_done">Clip split</string>
+    <string name="enter_text">Enter text</string>
+    <string name="add_text">Add text</string>
+    <string name="text_added">Text layer added</string>
 </resources>
