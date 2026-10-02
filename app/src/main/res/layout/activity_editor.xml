@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#090B14">
+    android:background="#11182B">
 
     <LinearLayout
         android:layout_width="match_parent" android:layout_height="match_parent"
@@ -30,11 +30,11 @@
 
         <FrameLayout
             android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
-            android:layout_marginHorizontal="10dp" android:background="#050609">
+            android:layout_marginHorizontal="10dp" android:background="#0C1220">
 
             <androidx.media3.ui.PlayerView android:id="@+id/playerView"
                 android:layout_width="match_parent" android:layout_height="match_parent"
-                android:background="#050609" app:use_controller="false"
+                android:background="#0C1220" app:use_controller="false"
                 app:resize_mode="fit"/>
 
             <ImageView android:id="@+id/imagePreview" android:layout_width="match_parent" android:layout_height="match_parent"
@@ -71,7 +71,7 @@
 
         <LinearLayout android:id="@+id/toolPanel" android:layout_width="match_parent" android:layout_height="92dp"
             android:orientation="vertical" android:paddingHorizontal="12dp" android:paddingVertical="6dp"
-            android:visibility="gone" android:background="#111528">
+            android:visibility="gone" android:background="#141F35">
             <LinearLayout android:layout_width="match_parent" android:layout_height="34dp" android:gravity="center_vertical">
                 <TextView android:id="@+id/toolTitle" android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" android:textColor="#F4F5F8" android:textStyle="bold" android:textSize="13sp"/>
