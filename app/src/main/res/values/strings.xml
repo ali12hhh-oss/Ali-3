@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Virexalo</string>
+    <string name="new_project">New project</string>
+    <string name="choose_media">Choose video or image</string>
+    <string name="editor">Editor</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="trim">Trim</string>
+    <string name="split">Split</string>
+    <string name="text">Text</string>
+    <string name="audio">Audio</string>
+    <string name="filters">Filters</string>
+    <string name="effects">Effects</string>
+    <string name="export">Export</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="close">Close</string>
+    <string name="exporting">Exporting…</string>
+    <string name="export_done">Export complete</string>
+    <string name="export_failed">Export failed</string>
+    <string name="media_files">Media files</string>
+    <string name="no_media">Select a video or image to start</string>
+</resources>
