@@ -43,6 +43,7 @@ class EditorActivity : AppCompatActivity() {
     private lateinit var playerView: PlayerView
     private lateinit var timeline: TimelineView
     private lateinit var emptyPreview: android.widget.TextView
+    private lateinit var imagePreview: android.widget.ImageView
     private var mediaUri: Uri? = null
     private var durationMs = 1L
     private var trimStartMs = 0L
@@ -55,6 +56,7 @@ class EditorActivity : AppCompatActivity() {
         playerView = findViewById(R.id.playerView)
         timeline = findViewById(R.id.timelineView)
         emptyPreview = findViewById(R.id.emptyPreview)
+        imagePreview = findViewById(R.id.imagePreview)
         mediaUri = intent.getStringExtra(EXTRA_URI)?.let(Uri::parse)
 
         findViewById<android.view.View>(R.id.backButton).setOnClickListener { finish() }
@@ -99,6 +101,22 @@ class EditorActivity : AppCompatActivity() {
 
     private fun preparePlayer() {
         val uri = mediaUri ?: return
+        val mime = contentResolver.getType(uri).orEmpty()
+        if (mime.startsWith("image/")) {
+            playerView.visibility = android.view.View.GONE
+            imagePreview.visibility = android.view.View.VISIBLE
+            imagePreview.setImageURI(uri)
+            emptyPreview.visibility = android.view.View.GONE
+            durationMs = 5000L
+            trimStartMs = 0L
+            trimEndMs = durationMs
+            timeline.setTimeline(durationMs, 0L)
+            currentProject = createInitialProject(uri)
+            currentProject?.let(viewModel::start)
+            return
+        }
+        playerView.visibility = android.view.View.VISIBLE
+        imagePreview.visibility = android.view.View.GONE
         emptyPreview.visibility = android.view.View.GONE
         val exo = ExoPlayer.Builder(this).build()
         player = exo
