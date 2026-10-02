@@ -219,16 +219,26 @@ class EditorActivity : AppCompatActivity() {
         val uri = mediaUri ?: return
         val mime = contentResolver.getType(uri).orEmpty()
         if (mime.startsWith("image/")) {
+            player?.release()
+            player = null
+            playerView.player = null
             playerView.visibility = android.view.View.GONE
             imagePreview.visibility = android.view.View.VISIBLE
-            imagePreview.setImageURI(uri)
-            emptyPreview.visibility = android.view.View.GONE
+            val bitmap = frameAt(uri)
+            if (bitmap != null) {
+                imagePreview.setImageBitmap(bitmap)
+                imagePreview.scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+                emptyPreview.visibility = android.view.View.GONE
+            } else {
+                imagePreview.setImageDrawable(null)
+                emptyPreview.visibility = android.view.View.VISIBLE
+            }
             durationMs = 5000L
             trimStartMs = 0L
             trimEndMs = durationMs
             timeline.setTimeline(durationMs, 0L)
             totalTimeText().text = formatTime(durationMs)
-            timeline.setMediaThumbnail(frameAt(uri))
+            timeline.setMediaThumbnail(bitmap)
             currentProject = createInitialProject(uri)
             currentProject?.let(viewModel::start)
             return
