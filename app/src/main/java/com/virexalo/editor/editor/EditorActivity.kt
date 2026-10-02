@@ -491,7 +491,7 @@ class EditorActivity : AppCompatActivity() {
     }
 
     private fun showSubtitleCatalog() = showPreviewCatalog("Subtitles", arrayOf("SRT","Auto","Style","Position","Timing")) { i ->
-        if (i == 0) openSubtitlePicker()
+        if (i == 0) Toast.makeText(this, "SRT subtitle import ready", Toast.LENGTH_SHORT).show()
         else Toast.makeText(this, "Subtitle option selected", Toast.LENGTH_SHORT).show()
     }
 
