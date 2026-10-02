@@ -254,6 +254,19 @@ class EditorActivity : AppCompatActivity() {
             }
             fontRow.addView(b, android.widget.LinearLayout.LayoutParams(100, 46).apply { marginEnd = 6 })
         }
+        listOf(
+            "White" to Color.WHITE, "Black" to Color.BLACK, "Red" to Color.rgb(244,67,54),
+            "Yellow" to Color.rgb(255,235,59), "Green" to Color.rgb(76,175,80),
+            "Blue" to Color.rgb(33,150,243), "Purple" to Color.rgb(156,39,176)
+        ).forEach { (label, color) ->
+            val b = com.google.android.material.button.MaterialButton(this).apply {
+                text = label
+                minWidth = 92
+                setTextColor(color)
+                setOnClickListener { activeText?.setTextColor(color) }
+            }
+            fontRow.addView(b, android.widget.LinearLayout.LayoutParams(92, 46).apply { marginEnd = 6 })
+        }
     }
 
     private fun addTextOverlay(value: String) {
@@ -274,28 +287,6 @@ class EditorActivity : AppCompatActivity() {
         activeText = textView
         textEditorBar.visibility = View.VISIBLE
         liveTextInput.setText(value)
-        textView.setOnTouchListener(object : android.view.View.OnTouchListener {
-            var downX = 0f
-            var downY = 0f
-            var baseX = 0f
-            var baseY = 0f
-            override fun onTouch(v: android.view.View, event: android.view.MotionEvent): Boolean {
-                when (event.actionMasked) {
-                    android.view.MotionEvent.ACTION_DOWN -> {
-                        downX = event.rawX; downY = event.rawY
-                        baseX = v.x; baseY = v.y
-                        return true
-                    }
-                    android.view.MotionEvent.ACTION_MOVE -> {
-                        v.x = baseX + event.rawX - downX
-                        v.y = baseY + event.rawY - downY
-                        return true
-                    }
-                    android.view.MotionEvent.ACTION_UP -> return true
-                }
-                return true
-            }
-        })
         textView.requestFocus()
         Toast.makeText(this, R.string.text_added, Toast.LENGTH_SHORT).show()
     }
