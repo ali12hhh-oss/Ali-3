@@ -2,6 +2,8 @@
     <string name="app_name">Virexalo</string>
     <string name="new_project">New project</string>
     <string name="choose_media">Choose video or image</string>
+    <string name="photos">Photos</string>
+    <string name="videos">Videos</string>
     <string name="editor">Editor</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
