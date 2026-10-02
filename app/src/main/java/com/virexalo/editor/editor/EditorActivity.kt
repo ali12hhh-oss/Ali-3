@@ -273,7 +273,7 @@ class EditorActivity : AppCompatActivity() {
         activeText?.let {
             it.beginBatchEdit()
             liveTextInput.setText(it.text)
-            liveTextInput.setSelection(liveTextInput.length())
+            liveTextInput.setSelection(liveTextInput.length)
             it.endBatchEdit()
             liveTextInput.requestFocus()
             (getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager)
@@ -413,7 +413,7 @@ class EditorActivity : AppCompatActivity() {
                         3 -> cm.set(floatArrayOf(0.84f,0f,0f,0f,0f, 0f,0.95f,0f,0f,0f, 0f,0f,1.10f,0f,0f, 0f,0f,0f,1f,0f))
                         4 -> cm.setSaturation(1.45f)
                     }
-                    preview.colorFilter = android.graphics.ColorMatrixColorFilter(cm)
+                    this.colorFilter = android.graphics.ColorMatrixColorFilter(cm)
                 }
             }
             val label = android.widget.TextView(this).apply {
