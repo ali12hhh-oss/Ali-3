@@ -40,4 +40,8 @@
     <string name="choose_language">اختيار اللغة</string>
     <string name="arabic">العربية</string>
     <string name="english">English</string>
+    <string name="studio_title">الاستوديو</string>
+    <string name="studio_empty">لا توجد وسائط</string>
+    <string name="settings_title">الإعدادات</string>
+    <string name="language_setting">اللغة</string>
 </resources>
