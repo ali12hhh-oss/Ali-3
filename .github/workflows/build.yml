@@ -13,6 +13,7 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - run: gradle :app:testDebugUnitTest
       - run: gradle :app:assembleDebug
       - uses: actions/upload-artifact@v4
         with:
